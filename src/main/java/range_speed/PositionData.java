@@ -6,17 +6,25 @@ class PositionData
 {
     String cowidPrevious="";
     String cowidCurrent="";
-    String PreviousDate="";
-    String CurrentDate="";
     String Year="";
     String Treatment="";
     String PreviousTime="";
     String CurrentTime="";
+
+    String PreviousDate="";
+    String CurrentDate="";
+
+    String PreviousDT = "";
+    String CurrentDT = "";
     Date TimePrevious=null;
     Date TimeCurrent=null;
     Date DateCurrent = null;
     Date DatePrevious = null;
+    Date DTPrevious = null;
+    Date DTCurrent = null;
     long DateDifference=0;
+    long DTDifferernce;
+
 
     double x1=0.0;//Positions
     double y1=0.0;
@@ -38,6 +46,8 @@ class PositionData
     double DayWoodLandArea=0.0;
     double PreNightWoodLandArea=0.0;
     double PostNightWoodLandArea=0.0;
+
+
 
     //Variable for tracking the positions of cow in pre,post,day times
     double pd2=0.0;
@@ -70,6 +80,11 @@ class PositionData
     int flag2=99;
     double day=0.0;
     double post=0.0;
+
+    public long DayTime;   //Store how many second in the day.
+    public long Pre_time;  //Store how many second before sun rise.
+    public long Day_time;  //Store how many second after sun rise and before sun set.
+    public long Post_time; //Store how many second after sun set
 
     @Override
     public String toString() {
@@ -129,6 +144,15 @@ class PositionData
         sb.append("flag2:").append(flag2).append("\n");
         sb.append("day:").append(day).append("\n");
         sb.append("post:").append(post).append("\n");
+        sb.append("PreviousDT:").append(PreviousDT).append("\n");
+        sb.append("CurrentDT:").append(CurrentDT).append("\n");
+        sb.append("DTPrevious:").append(DTPrevious).append("\n");
+        sb.append("DTCurrent:").append(DTCurrent).append("\n");
+        sb.append("DTDifferernce:").append(DTDifferernce).append("\n");
+        sb.append("DayTime:").append(DayTime).append("\n");
+        sb.append("Pre_time:").append(Pre_time).append("\n");
+        sb.append("Day_time:").append(Day_time).append("\n");
+        sb.append("Post_time:").append(Post_time).append("\n");
         sb.append("==========================================").append("\n");
         return sb.toString();
     }
