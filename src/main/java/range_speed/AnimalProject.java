@@ -22,7 +22,7 @@ public class AnimalProject {
         InputStreamReader inp = new InputStreamReader(System.in);
         BufferedReader in = new BufferedReader(inp);
         //Process position file names
-        System.out.println("Enter position file name (Default: DataWithPosition_sample.csv): ");
+        System.out.println("Enter position file name (Default: DataWithPosition.csv): ");
         String str = in.readLine();
         if (str.trim().length() > 0) {
             fileDataPosition = str;
