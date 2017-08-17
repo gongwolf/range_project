@@ -12,33 +12,46 @@ import java.lang.Math;
 
 
 public class AnimalProject {
-    private static String fileDataPosition = "data/DataWithPosition_sample.csv";
-    private static String fileWeather = "data/Weather.csv";
-    private static String fileTime = "data/Time.csv";
-    private final static String outputDistSino = "data/DistanceandSiniosity.csv";
-    private final static String outputAll = "data/CompleteProcessedData.csv";
+    private static String fileDataPosition = "data/speed/DataWithPosition.csv";
+    private static String fileWeather = "data/speed/Weather.csv";
+    private static String fileTime = "data/speed/Time.csv";
+    private final static String outputDistSino = "data/speed/output/DistanceandSiniosity.csv";
+    private final static String outputAll = "data/speed/output/CompleteProcessedData.csv";
 
     private static void fileNameProcess() throws IOException {
         InputStreamReader inp = new InputStreamReader(System.in);
         BufferedReader in = new BufferedReader(inp);
         //Process position file names
-        System.out.println("Enter position file name (Default: DataWithPosition.csv): ");
+        System.out.println("Enter position file name (Default: data/speed/DataWithPosition.csv): ");
         String str = in.readLine();
         if (str.trim().length() > 0) {
             fileDataPosition = str;
         }
         //process weather file names
-        System.out.println("Enter whether file name (Default: Weather.csv) : ");
+        System.out.println("Enter whether file name (Default: data/speed/Weather.csv) : ");
         str = in.readLine();
         if (str.trim().length() > 0) {
             fileWeather = str;
         }
         //process Time file names
-        System.out.println("Enter time file Name (Default, Time.csv): ");
+        System.out.println("Enter time file Name (Default, data/speed/Time.csv): ");
         str = in.readLine();
         if (str.trim().length() > 0) {
             fileTime = str;
         }
+
+        File AllPath = new File(outputAll);
+        File DistSinoPath = new File(outputDistSino);
+//        System.out.println(AllPath.getParent());
+
+        if (!AllPath.getParentFile().exists()) {
+            AllPath.getParentFile().mkdirs();
+        }
+
+        if (!DistSinoPath.getParentFile().exists()) {
+            DistSinoPath.getParentFile().mkdirs();
+        }
+
     }
 
     private static void writeHeaderDistSino(FileWriter writerDistSino) throws IOException {
@@ -191,11 +204,6 @@ public class AnimalProject {
 
         }
 
-        writerDistSino.append(String.valueOf(PositionData.day_dist));
-        writerDistSino.append(',');
-        writerDistSino.append(String.valueOf(PositionData.pre_dist));
-        writerDistSino.append(',');
-        writerDistSino.append(String.valueOf(PositionData.post_dist));
         writerDistSino.append(',');
         writerDistSino.append(String.valueOf(PositionData.tot_sin));
         writerDistSino.append(',');
@@ -253,6 +261,14 @@ public class AnimalProject {
             writerAll.append(',');
         } else {
             writerAll.append(String.valueOf(PositionData.pre_dist / PositionData.Pre_time));
+            writerAll.append(',');
+        }
+
+        if (PositionData.Post_time == 0) {
+            writerAll.append("0");
+            writerAll.append(',');
+        } else {
+            writerAll.append(String.valueOf(PositionData.post_dist / PositionData.Post_time));
             writerAll.append(',');
         }
         writerAll.append(String.valueOf(PositionData.tot_sin));
@@ -538,7 +554,7 @@ public class AnimalProject {
                             PositionData.CurrentDT = PositionData.CurrentDate + " " + PositionData.CurrentTime;
 
                             PositionData.DTCurrent = DTFormatter.parse(PositionData.CurrentDT);
-                            PositionData.DTDifferernce = Math.abs(PositionData.DTCurrent.getTime() - PositionData.DTPrevious.getTime()) / (1000*60);
+                            PositionData.DTDifferernce = Math.abs(PositionData.DTCurrent.getTime() - PositionData.DTPrevious.getTime()) / (1000 * 60);
                         }
                     }
 
@@ -603,13 +619,13 @@ public class AnimalProject {
 
             writeDistSino(writerDistSino, PositionData);//Writing Values
             writerDistSino.append('\n');
-            System.out.println("Done!! See ' DistanceandSiniosity file' for whole Data with All Calculations");
+            System.out.println("Done!! See "+ outputDistSino +" for whole Data with All Calculations");
             ReadWeather(PositionData, lineNumber, writerAll);//Reading Weather File and attaching weather Factors
             writerDistSino.flush();
             writerDistSino.close();
             writerAll.flush();
             writerAll.close();
-            System.out.println("Done!! See 'Complete Processed Data file' for whole Data with Weather Factors");
+            System.out.println("Done!! See "+outputAll+" for whole Data with Weather Factors");
         }//Try Ending
         catch (FileNotFoundException e) {
             e.printStackTrace();

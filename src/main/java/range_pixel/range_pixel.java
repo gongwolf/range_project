@@ -21,6 +21,28 @@ public class range_pixel {
         System.out.println(rp.pixelList.size());
         rp.readGPSData();
         System.out.println(rp.result.size());
+//        rp.printPixelListWihtCowID("10");
+        rp.printVisitDateWithCowIDandPid("1290","61");
+
+    }
+
+    private void printVisitDateWithCowIDandPid(String cowid, String pid) {
+        long Lpid = Long.parseLong(pid);
+        HashSet<String> dataList = this.result.get(cowid).get(Lpid);
+//        System.out.println(dataList.size());
+        for(String d:dataList)
+        {
+            System.out.println(d);
+        }
+    }
+
+    private void printPixelListWihtCowID(String cowid) {
+        System.out.println("==========");
+        HashMap<Long, HashSet<String>> pList = this.result.get(cowid);
+        for(Long key:pList.keySet())
+        {
+            System.out.println(key);
+        }
     }
 
     private void loadPixelData() {
@@ -94,8 +116,12 @@ public class range_pixel {
                     double distance = Math.abs(Math.sqrt(Math.pow(pd.easting - easting, 2) + Math.pow(pd.northing - northing, 2)));
                     double speed = distance / 5;
 
-                    if (speed >= 5 && speed < 100) {
+                    if (speed >= 5 && speed <= 100) {
                         long pixelId = getPixelID(northing, easting);
+                        if(pixelId==-1)
+                        {
+                            continue;
+                        }
                         if (this.result.containsKey(cowId)) {
                             HashMap<Long, HashSet<String>> pixelMapping = this.result.get(cowId);
                             if (pixelMapping.containsKey(pixelId)) {
@@ -138,7 +164,7 @@ public class range_pixel {
     }
 
     private long getPixelID(double northing, double easting) {
-        long result = 0;
+        long result = -1;
 //        System.out.println("        "+northing+"  "+easting);
         for (Map.Entry<Long, Pair<Double, Double>> e : this.pixelList.entrySet()) {
             double x = e.getValue().getKey();
