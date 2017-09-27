@@ -12,7 +12,7 @@ public class range_pixel {
     String pixelPath = "data/pixel/pixel.csv";
     //    String GPSData = "data/pixel/sample_gps.csv";
     String GPSData = "data/pixel/cordinate_points.csv";
-    HashMap<Long, Pair<Double, Double>> pixelList = new HashMap<Long, Pair<Double, Double>>();
+    HashMap<Long, Pair<Double, Double>> pixelList = new HashMap<Long, Pair<Double, Double>>(); //pixel_id -> <northing,easting>
     HashMap<String, HashMap<Long, HashSet<String>>> result = new HashMap<String, HashMap<Long, HashSet<String>>>();
 
     public static void main(String args[]) {
@@ -21,8 +21,8 @@ public class range_pixel {
         System.out.println(rp.pixelList.size());
         rp.readGPSData();
         System.out.println(rp.result.size());
-//        rp.printPixelListWihtCowID("10");
-        rp.printVisitDateWithCowIDandPid("1290","61");
+        rp.printPixelListWihtCowID("10");
+//        rp.printVisitDateWithCowIDandPid("1290","61");
 
     }
 
@@ -39,9 +39,15 @@ public class range_pixel {
     private void printPixelListWihtCowID(String cowid) {
         System.out.println("==========");
         HashMap<Long, HashSet<String>> pList = this.result.get(cowid);
+        System.out.println(cowid+"  "+pixelList.keySet().size());
         for(Long key:pList.keySet())
         {
-            System.out.println(key);
+            HashSet<String> datelist = pList.get(key);
+            System.out.println("    "+key);
+            for(String dt:datelist)
+            {
+                System.out.println("        "+dt);
+            }
         }
     }
 
@@ -56,22 +62,21 @@ public class range_pixel {
             String line = null;
             while ((line = br.readLine()) != null) {
                 linenumber++;
+                //jump the header
                 if (linenumber == 1) {
                     continue;
                 }
                 String[] infos = line.split("\t");
-//                System.out.println(infos.length);
                 Long pixelID = Long.parseLong(infos[0]);
-                Double pixelNorthing = Double.parseDouble(infos[2]);
                 Double pixelEasting = Double.parseDouble(infos[1]);
+                Double pixelNorthing = Double.parseDouble(infos[2]);
                 this.pixelList.put(pixelID, new Pair<Double, Double>(pixelNorthing, pixelEasting));
-//                System.out.println(pixelNorthing+"   "+pixelEasting);
             }
             br.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("done" + "   " + linenumber);
+        System.out.println("read the pixel file done" + "   " + linenumber);
 
     }
 
@@ -86,11 +91,11 @@ public class range_pixel {
             String line = null;
             while ((line = br.readLine()) != null) {
                 linenumber++;
+                //jump the header
                 if (linenumber == 1) {
                     continue;
                 }
 
-//                System.out.println(line);
                 String[] infos = line.split(",");
                 String gpsId = infos[0];
                 String cowId = infos[1];
@@ -105,23 +110,25 @@ public class range_pixel {
                   2. Different cowid
                   3. Different date
                 */
-                if (pd.isnull()) {
+                if (pd.isnull()) { //if it is the first record I read
                     pd.setNull(false);
-//                    System.out.println("1:" + line);
-                } else if (!pd.cowId.equals(cowId)) {
-//                    System.out.println("2:" + line);
-                } else if (!pd.date.equals(date)) {
-//                    System.out.println("3:" + line);
+                } else if (!pd.cowId.equals(cowId)) { // if it is not the second record and the record match a different cow
+                } else if (!pd.date.equals(date)) { // if the same cow but the GPS record is in a different day
                 } else {
+                    //calculate the speed of the cow start from the previous record
                     double distance = Math.abs(Math.sqrt(Math.pow(pd.easting - easting, 2) + Math.pow(pd.northing - northing, 2)));
                     double speed = distance / 5;
 
+                    //if the speed need further processing
                     if (speed >= 5 && speed <= 100) {
-                        long pixelId = getPixelID(northing, easting);
-                        if(pixelId==-1)
+                        //Todo: may it could find multiple pixel
+                        long pixelId = getPixelID(northing, easting); //get the pixel that could include the current gps record
+
+                        if(pixelId==-1) //if I can not find such a pixel
                         {
                             continue;
                         }
+
                         if (this.result.containsKey(cowId)) {
                             HashMap<Long, HashSet<String>> pixelMapping = this.result.get(cowId);
                             if (pixelMapping.containsKey(pixelId)) {
@@ -134,7 +141,6 @@ public class range_pixel {
                                 datelist.add(date);
                                 pixelMapping.put(pixelId, datelist);
                                 this.result.put(cowId, pixelMapping);
-
                             }
 
                         } else {
@@ -145,13 +151,6 @@ public class range_pixel {
                             this.result.put(cowId, pixelMapping);
                         }
                     }
-//                    System.out.println(getPixelID(northing,easting));
-//                    if(getPixelID(northing,easting)>1)
-//                        System.out.println("!!!!!!");
-//                    System.out.println("========================");
-//                    System.out.println(pd.northing+"   "+northing);
-//                    System.out.println(pd.easting+"   "+easting);
-//                    System.out.println(distance);
                 }
 
                 pd.setAttrs(infos);
@@ -160,16 +159,15 @@ public class range_pixel {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("done" + "   " + linenumber);
+        System.out.println("read the gps file done" + "   " + linenumber);
     }
 
     private long getPixelID(double northing, double easting) {
         long result = -1;
-//        System.out.println("        "+northing+"  "+easting);
         for (Map.Entry<Long, Pair<Double, Double>> e : this.pixelList.entrySet()) {
-            double x = e.getValue().getKey();
-            double y = e.getValue().getValue();
-//            System.out.println(x+"  "+y);
+            double x = e.getValue().getKey(); //northing
+            double y = e.getValue().getValue(); //easting
+            //easting puls, norting sub
             if ((northing < x && northing > x - 30) && (easting > y && easting < y + 30)) {
                 result = e.getKey();
                 break;
