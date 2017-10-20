@@ -24,7 +24,7 @@ public class range_pixel {
 //        rp.printPixelListWihtCowID("14492");
 
         rp.printResult1();
-//        rp.setYearinfos();
+        rp.setYearinfos();
 //        rp.printResult3();
     }
 
@@ -106,9 +106,9 @@ public class range_pixel {
             TreeSet<Long> keyList = new TreeSet<>(yearsCounts.keySet());
             for (long key : keyList) {
                 int size = yearsCounts.get(key).get(0).intValue();
-                double avg_total = yearsCounts.get(key).get(1)/size;
-                double avg_period = yearsCounts.get(key).get(2)/size;
-                System.out.println(cowid + " " + key + " " + size  + " " + avg_total + " " + avg_period);
+                double avg_total = yearsCounts.get(key).get(1) / size;
+                double avg_period = yearsCounts.get(key).get(2) / size;
+                System.out.println(cowid + " " + key + " " + size + " " + avg_total + " " + avg_period);
             }
 
         }
@@ -208,10 +208,12 @@ public class range_pixel {
                 if (linenumber == 1) {
                     continue;
                 }
-                String[] infos = line.split("\\t");
+                String[] infos = line.split("\t");
                 Long pixelID = Long.parseLong(infos[0]);
-                Double pixelNorthing = Double.parseDouble(infos[1]);
-                Double pixelEasting = Double.parseDouble(infos[2]);
+//                Double pixelNorthing = Double.parseDouble(infos[1]);
+//                Double pixelEasting = Double.parseDouble(infos[2]);
+                Double pixelEasting = Double.parseDouble(infos[1]);
+                Double pixelNorthing = Double.parseDouble(infos[2]);
                 this.pixelList.put(pixelID, new Pair<Double, Double>(pixelNorthing, pixelEasting));
             }
             br.close();
@@ -270,13 +272,13 @@ public class range_pixel {
                     if (speed >= 5 && speed <= 100) {
                         //Todo: may it could find multiple pixel
                         long pixelId = getPixelID(northing, easting); //get the pixel that could include the current gps record
-//                        if (cowId.equals("14492") && pixelId == 1) {
-//                            System.out.println(Math.pow(pd.easting - easting, 2));
-//                            System.out.println(Math.pow(pd.northing - northing, 2));
-//                            System.out.println(pd.easting + " " + easting + " " + " " + pd.northing + " " + northing + " " + speed);
-//                            System.out.println(linenumber + " " + date);
-//                            System.out.println("=============");
-//                        }
+                        if (cowId.equals("1") && pixelId == 2) {
+                            System.out.println(Math.pow(pd.easting - easting, 2));
+                            System.out.println(Math.pow(pd.northing - northing, 2));
+                            System.out.println(pd.easting + " " + easting + " " + " " + pd.northing + " " + northing + " " + speed);
+                            System.out.println(linenumber + " " + date);
+                            System.out.println("=============");
+                        }
 
                         if (pixelId == -1) //if I can not find such a pixel
                         {
@@ -319,8 +321,8 @@ public class range_pixel {
     private long getPixelID(double northing, double easting) {
         long result = -1;
         for (Map.Entry<Long, Pair<Double, Double>> e : this.pixelList.entrySet()) {
-            double y = e.getValue().getKey(); //northing
-            double x = e.getValue().getValue(); //easting
+            double x = e.getValue().getKey(); //northing
+            double y = e.getValue().getValue(); //easting
             //easting puls, norting sub
             if ((northing < x && northing > x - 30) && (easting > y && easting < y + 30)) {
                 result = e.getKey();
