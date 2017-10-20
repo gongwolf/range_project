@@ -8,9 +8,9 @@ import java.util.*;
 import java.text.*;
 
 public class range_pixel {
-    String pixelPath = "data/pixel/pixel.csv";
+    String pixelPath = "data/pixel/pixel_1.csv";
     //    String GPSData = "data/pixel/sample_gps.csv";
-    String GPSData = "data/pixel/cordinate_points.csv";
+    String GPSData = "data/pixel/cordinate_points_1.csv";
     HashMap<Long, Pair<Double, Double>> pixelList = new HashMap<Long, Pair<Double, Double>>(); //pixel_id -> <northing,easting>
     HashMap<String, HashMap<Long, HashSet<String>>> result = new HashMap<String, HashMap<Long, HashSet<String>>>();
     HashMap<String, HashMap<Long, HashMap<Long, HashSet<String>>>> yearInfos = new HashMap<>();
@@ -23,9 +23,9 @@ public class range_pixel {
 //        System.out.println(rp.result.size());
 //        rp.printPixelListWihtCowID("14492");
 
-//        rp.printResult1();
-        rp.setYearinfos();
-        rp.printResult3();
+        rp.printResult1();
+//        rp.setYearinfos();
+//        rp.printResult3();
     }
 
     private void setYearinfos() {
@@ -208,7 +208,7 @@ public class range_pixel {
                 if (linenumber == 1) {
                     continue;
                 }
-                String[] infos = line.split(",");
+                String[] infos = line.split("\\t");
                 Long pixelID = Long.parseLong(infos[0]);
                 Double pixelNorthing = Double.parseDouble(infos[1]);
                 Double pixelEasting = Double.parseDouble(infos[2]);
@@ -218,7 +218,7 @@ public class range_pixel {
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        System.out.println("read the pixel file done" + "   " + linenumber);
+        System.out.println("read the pixel file done" + "   " + linenumber);
 
     }
 
@@ -313,16 +313,16 @@ public class range_pixel {
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        System.out.println("read the gps file done" + "   " + linenumber);
+        System.out.println("read the gps file done" + "   " + linenumber);
     }
 
     private long getPixelID(double northing, double easting) {
         long result = -1;
         for (Map.Entry<Long, Pair<Double, Double>> e : this.pixelList.entrySet()) {
-            double x = e.getValue().getKey(); //northing
-            double y = e.getValue().getValue(); //easting
+            double y = e.getValue().getKey(); //northing
+            double x = e.getValue().getValue(); //easting
             //easting puls, norting sub
-            if ((northing < x && northing > x - 15) && (easting > y && easting < y + 15)) {
+            if ((northing < x && northing > x - 30) && (easting > y && easting < y + 30)) {
                 result = e.getKey();
                 break;
             }
