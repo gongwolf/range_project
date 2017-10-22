@@ -20,12 +20,12 @@ public class range_pixel {
         rp.loadPixelData();
 //        System.out.println(rp.pixelList.size());
         rp.readGPSData();
-//        System.out.println(rp.result.size());
-//        rp.printPixelListWihtCowID("14492");
+        System.out.println(rp.result.size());
+//        rp.printVisitDateWithCowIDandPid("953","113");
 
-        rp.printResult1();
+//        rp.printResult1();
         rp.setYearinfos();
-//        rp.printResult3();
+        rp.printResult3();
     }
 
     private void setYearinfos() {
@@ -167,7 +167,10 @@ public class range_pixel {
 
         }
 
-        return (maxdate.getTime() - mindate.getTime()) / (24 * 60 * 60 * 1000);
+//        System.out.println((maxdate.getTime() - mindate.getTime()));
+//        System.out.println((maxdate.getTime() - mindate.getTime()) / (1000*60*60*24));
+//        System.out.println((double)(maxdate.getTime() - mindate.getTime()) / (1000*60*60*24));
+        return Math.round((double)(maxdate.getTime() - mindate.getTime()) / (1000*60*60*24));
 
     }
 
@@ -178,6 +181,7 @@ public class range_pixel {
         for (String d : dataList) {
             System.out.println(d);
         }
+        System.out.println(getDifferDate(dataList));
     }
 
     private void printPixelListWihtCowID(String cowid) {
