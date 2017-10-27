@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
-  <artifact name="Calculations:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/Calculations_jar</output-path>
+  <artifact name="range_project:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/range_project_jar</output-path>
     <root id="root">
       <element id="archive" name="range_project.jar">
         <element id="directory" name="META-INF">

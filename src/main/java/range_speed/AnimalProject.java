@@ -12,29 +12,29 @@ import java.lang.Math;
 
 
 public class AnimalProject {
-    private static String fileDataPosition = "data/speed/DataWithPosition.csv";
-    private static String fileWeather = "data/speed/Weather.csv";
-    private static String fileTime = "data/speed/Time.csv";
-    private final static String outputDistSino = "data/speed/output/DistanceandSiniosity.csv";
-    private final static String outputAll = "data/speed/output/CompleteProcessedData.csv";
+    private static String fileDataPosition = "DataWithPosition.csv";
+    private static String fileWeather = "Weather.csv";
+    private static String fileTime = "Time.csv";
+    private final static String outputDistSino = "DistanceandSiniosity.csv";
+    private final static String outputAll = "CompleteProcessedData.csv";
 
     private static void fileNameProcess() throws IOException {
         InputStreamReader inp = new InputStreamReader(System.in);
         BufferedReader in = new BufferedReader(inp);
         //Process position file names
-        System.out.println("Enter position file name (Default: data/speed/DataWithPosition.csv): ");
+        System.out.println("Enter position file name (Default: DataWithPosition.csv): ");
         String str = in.readLine();
         if (str.trim().length() > 0) {
             fileDataPosition = str;
         }
         //process weather file names
-        System.out.println("Enter whether file name (Default: data/speed/Weather.csv) : ");
+        System.out.println("Enter whether file name (Default: Weather.csv) : ");
         str = in.readLine();
         if (str.trim().length() > 0) {
             fileWeather = str;
         }
         //process Time file names
-        System.out.println("Enter time file Name (Default, data/speed/Time.csv): ");
+        System.out.println("Enter time file Name (Default, Time.csv): ");
         str = in.readLine();
         if (str.trim().length() > 0) {
             fileTime = str;
@@ -44,13 +44,13 @@ public class AnimalProject {
         File DistSinoPath = new File(outputDistSino);
 //        System.out.println(AllPath.getParent());
 
-        if (!AllPath.getParentFile().exists()) {
-            AllPath.getParentFile().mkdirs();
-        }
-
-        if (!DistSinoPath.getParentFile().exists()) {
-            DistSinoPath.getParentFile().mkdirs();
-        }
+//        if (!AllPath.getParentFile().exists()) {
+//            AllPath.getParentFile().mkdirs();
+//        }
+//
+//        if (!DistSinoPath.getParentFile().exists()) {
+//            DistSinoPath.getParentFile().mkdirs();
+//        }
 
     }
 
