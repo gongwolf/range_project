@@ -3,8 +3,9 @@ package range_pixel;
 import javafx.util.Pair;
 
 import java.io.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
-import java.text.*;
 
 public class range_pixel {
     String pixelPath = "pixel.csv";
@@ -13,11 +14,12 @@ public class range_pixel {
 
 
     HashMap<Long, Pair<Double, Double>> pixelList = new HashMap<Long, Pair<Double, Double>>(); //pixel_id -> <northing,easting>
-    HashMap<String, HashMap<Long, HashSet<String>>> result = new HashMap<String, HashMap<Long, HashSet<String>>>();
+    HashMap<String, HashMap<Long, HashSet<String>>> result = new HashMap<>(); //cowID—> Hashmap<pixel_id,data in the pixel of the cow>
     HashMap<String, HashMap<Long, HashMap<Long, HashSet<String>>>> yearInfos = new HashMap<>();
-    private int range_size=30;
-    private int min_speed=5;
-    private int max_speed=100;
+    private int range_size = 30;
+    private int min_speed = 5;
+    private int max_speed = 100;
+    private HashMap<Long, Integer> pixel_veg_class = new HashMap<>();//pix
 
     public static void main(String args[]) {
         range_pixel rp = new range_pixel();
@@ -194,7 +196,7 @@ public class range_pixel {
              PrintWriter out = new PrintWriter(bw)) {
 
 
-            out.println("Cow_id, Years, Pixel_id, times of visiting back to pixel, period value (the # of average interval days the cow visit the same pixel)");
+            out.println("Cow_id, Years, Pixel_id, times of visiting back to pixel, period value, vegetable class");
 
             for (Map.Entry<String, HashMap<Long, HashMap<Long, HashSet<String>>>> cow_infos : yearInfos.entrySet()) {
                 String cowid = cow_infos.getKey();
@@ -205,7 +207,9 @@ public class range_pixel {
                         int size = pixel_infos.getValue().size();
                         long diff = getDifferDate(pixel_infos.getValue());
                         String period = size - 1 != 0 ? String.valueOf((double) diff / (size - 1)) : "\\N";
-                        out.println(cowid + "," + year + "," + pixel_id + "," + size + "," + period);
+//                        out.println(cowid + "," + year + "," + pixel_id + "," + size + "," + period);
+                        int pixelVegClass = pixel_veg_class.get(pixel_id);
+                        out.println(cowid + "," + year + "," + pixel_id + "," + size + "," + period+","+pixelVegClass);
 
                     }
                 }
@@ -230,7 +234,7 @@ public class range_pixel {
         try (FileWriter fw = new FileWriter("result1.csv", true);
              BufferedWriter bw = new BufferedWriter(fw);
              PrintWriter out = new PrintWriter(bw)) {
-            out.println("Cow_id, Pixel_id, times of visiting back to pixel, # of interval days");
+            out.println("Cow_id, Pixel_id, times of visiting back to pixel, Interval days, Vegetable class");
 
             for (Map.Entry<String, HashMap<Long, HashSet<String>>> cow_infos : this.result.entrySet()) {
                 String cowid = cow_infos.getKey();
@@ -238,7 +242,10 @@ public class range_pixel {
                     long pixel_id = pixel_infos.getKey();
                     int size = pixel_infos.getValue().size();
                     long diff = getDifferDate(pixel_infos.getValue());
-                    out.println(cowid + "," + pixel_id + "," + size + "," + diff);
+//                    out.println(cowid + "," + pixel_id + "," + size + "," + diff);
+
+                    int pixelVegClass = this.pixel_veg_class.get(pixel_id);
+                    out.println(cowid + "," + pixel_id + "," + size + "," + diff+","+pixelVegClass);
                 }
             }
 
@@ -316,17 +323,21 @@ public class range_pixel {
                 }
                 String[] infos = line.split(",");
                 Long pixelID = Long.parseLong(infos[0]);
-//                Double pixelNorthing = Double.parseDouble(infos[1]);
-//                Double pixelEasting = Double.parseDouble(infos[2]);
-                Double  pixelNorthing = Double.parseDouble(infos[1]);
-                Double  pixelEasting = Double.parseDouble(infos[2]);
-                this.pixelList.put(pixelID, new Pair<Double, Double>(pixelNorthing, pixelEasting));
+                Double pixelNorthing = Double.parseDouble(infos[1]);
+                Double pixelEasting = Double.parseDouble(infos[2]);
+                int pixelVegClass = Integer.valueOf(infos[3]);
+                this.pixelList.put(pixelID, new Pair<>(pixelNorthing, pixelEasting));
+                this.pixel_veg_class.put(pixelID,pixelVegClass);
+//                System.out.println(pixelID+","+pixelNorthing+","+pixelEasting+",");
             }
             br.close();
         } catch (Exception e) {
+//            e.printStackTrace();
             System.err.println("Can not open the Pixel file, please check it. ");
         }
         System.out.println("read the pixel file done" + "   " + linenumber);
+//        System.out.println(this.pixelList.size());
+//        System.out.println(this.pixel_veg_class.size());
 
     }
 
@@ -351,7 +362,7 @@ public class range_pixel {
 //                    break;
 //                }
 
-//                System.out.println(linenumber);
+//                System.out.println(line);
 
                 String[] infos = line.split(",");
                 String gpsId = infos[0];
@@ -376,15 +387,15 @@ public class range_pixel {
 
                     //if the speed need further processing
                     if (speed >= this.min_speed && speed <= this.max_speed) {
-                        //Todo: may it could find multiple pixel
                         long pixelId = getPixelID(northing, easting); //get the pixel that could include the current gps record
-                        if (cowId.equals("1") && pixelId == 2) {
-                            System.out.println(Math.pow(pd.easting - easting, 2));
-                            System.out.println(Math.pow(pd.northing - northing, 2));
-                            System.out.println(pd.easting + " " + easting + " " + " " + pd.northing + " " + northing + " " + speed);
-                            System.out.println(linenumber + " " + date);
-                            System.out.println("=============");
-                        }
+//                        System.out.println(linenumber+" "+pixelId);
+//                        if (cowId.equals("1") && pixelId == 2) {
+//                            System.out.println(Math.pow(pd.easting - easting, 2));
+//                            System.out.println(Math.pow(pd.northing - northing, 2));
+//                            System.out.println(pd.easting + " " + easting + " " + " " + pd.northing + " " + northing + " " + speed);
+//                            System.out.println(linenumber + " " + date);
+//                            System.out.println("=============");
+//                        }
 
                         if (pixelId == -1) //if I can not find such a pixel
                         {
@@ -419,9 +430,11 @@ public class range_pixel {
             }
             br.close();
         } catch (Exception e) {
+//            e.printStackTrace();
             System.err.println("Can not open the Coordination file, please check it. ");
         }
         System.out.println("read the gps file done" + "   " + linenumber);
+//        System.out.println(this.result.size());
     }
 
     private long getPixelID(double northing, double easting) {
@@ -430,6 +443,7 @@ public class range_pixel {
             double x = e.getValue().getKey(); //northing
             double y = e.getValue().getValue(); //easting
             //easting puls, norting sub
+//            if ((northing < x && northing > x - this.range_size) && (easting > y && easting < y + this.range_size)) {
             if ((northing < x && northing > x - this.range_size) && (easting > y && easting < y + this.range_size)) {
                 result = e.getKey();
                 break;
