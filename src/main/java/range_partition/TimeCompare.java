@@ -31,6 +31,7 @@ public class TimeCompare {
             }
         } catch (ParseException e) {
             System.out.println("There is something wrong with your time formation, please check it");
+            System.exit(0);
         }
 
         return -1;
