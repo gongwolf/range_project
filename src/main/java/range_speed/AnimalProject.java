@@ -203,8 +203,6 @@ public class AnimalProject {
             writerDistSino.append(',');
 
         }
-
-        writerDistSino.append(',');
         writerDistSino.append(String.valueOf(PositionData.tot_sin));
         writerDistSino.append(',');
         writerDistSino.append(String.valueOf(PositionData.day_sin));
