@@ -9,7 +9,12 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+
+import static range_speed.ConvexHull.convex_hull;
 
 public class newAminalFunctions {
 
@@ -18,9 +23,9 @@ public class newAminalFunctions {
 
     HashMap<String, HashMap<String, ArrayList<Double[]>>> pointsMap = new HashMap<>(); //cowid -> <date, List of points>
 
-    HashMap<String, HashMap<String, HashSet<Pair<Double,Double>>>> pre_pointsMap = new HashMap<>(); //cowid -> <date, List of points>
-    HashMap<String, HashMap<String, HashSet<Pair<Double,Double>>>> day_pointsMap = new HashMap<>(); //cowid -> <date, List of points>
-    HashMap<String, HashMap<String, HashSet<Pair<Double,Double>>>> post_pointsMap = new HashMap<>(); //cowid -> <date, List of points>
+    HashMap<String, HashMap<String, HashSet<Pair<Double, Double>>>> pre_pointsMap = new HashMap<>(); //cowid -> <date, List of points>
+    HashMap<String, HashMap<String, HashSet<Pair<Double, Double>>>> day_pointsMap = new HashMap<>(); //cowid -> <date, List of points>
+    HashMap<String, HashMap<String, HashSet<Pair<Double, Double>>>> post_pointsMap = new HashMap<>(); //cowid -> <date, List of points>
     DateFormat TimeFormatter = new SimpleDateFormat("hh:mm:ss a");
 
 
@@ -83,7 +88,7 @@ public class newAminalFunctions {
                 }
 
                 String[] infos = line.split(",");
-                if (infos.length >= 5 && infos[0].equals("8833") && infos[1].equals("4/6/2006")) {
+                if (infos.length >= 5 ) {
                     String c_cowid = infos[0];
                     String c_date = infos[1];
                     String c_time = infos[2];
@@ -174,13 +179,57 @@ public class newAminalFunctions {
 
 
     public void convexHull() {
-        HashMap<String, HashSet<Pair<Double, Double>>> d = this.post_pointsMap.get("8833");
-        HashSet<Pair<Double, Double>> points = d.get("4/6/2006");
-        int linenumber = 0;
-        for(Pair<Double, Double> dd: points)
-        {
-            System.out.println(linenumber++ +"  "+dd.getKey()+"  "+dd.getValue());
+        HashMap<String, HashSet<Pair<Double, Double>>> d = this.day_pointsMap.get("4012");
+        System.out.println(pre_pointsMap.get("4012").size()+","+day_pointsMap.get("4012").size()+","+post_pointsMap.get("4012").size());
+        HashSet<Pair<Double, Double>> points = d.get("4/4/2007");
+        Point[] p = new Point[points.size()];
+//        System.out.print(points.size());
+        int i = 0;
+        for (Pair<Double, Double> dd : points) {
+//            System.out.print(" "+dd.getKey()+" "+dd.getValue());
+            System.out.println(dd.getKey() + "," + dd.getValue());
+            p[i] = new Point();
+            p[i].x = dd.getKey(); // Read X coordinate
+            p[i].y = dd.getValue(); // Read y coordinate
+            i++;
         }
+
+
+        Point[] hull = convex_hull(p).clone();
+
+        double[] xlist = new double[hull.length];
+        double[] ylist = new double[hull.length];
+        System.out.println(hull.length);
+
+        for (i = 0; i < hull.length; i++) {
+            if (hull[i] != null) {
+                xlist[i] = hull[i].x;
+                ylist[i] = hull[i].y;
+            }
+        }
+
+        StringBuffer sb = new StringBuffer();
+        sb.append("plt.plot([");
+        for (i = 0; i < hull.length; i++) {
+            sb.append(xlist[i]);
+            if (i != hull.length - 1)
+                sb.append(",");
+        }
+        sb.append("],[");
+        for (i = 0; i < hull.length; i++) {
+            sb.append(ylist[i]);
+            if (i != hull.length - 1)
+                sb.append(",");
+        }
+        sb.append("],'ro')");
+
+        System.out.println(sb);
+        for (i = 0; i < hull.length - 1; i++) {
+            System.out.println("plt.plot([" + xlist[i] + "," + xlist[i + 1] + "],[" + ylist[i] + "," + ylist[i + 1] + "],color='r', linewidth=0.5)");
+        }
+
+        System.out.println("plt.plot([" + xlist[i] + "," + xlist[0] + "],[" + ylist[i] + "," + ylist[0] + "],color='r', linewidth=0.5)");
+
 
     }
 
