@@ -1,10 +1,6 @@
 package range_speed;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.Arrays;
-import java.util.StringTokenizer;
 
 class Point implements Comparable<Point> {
     double x, y;
@@ -33,11 +29,19 @@ class Point implements Comparable<Point> {
 
 public class ConvexHull {
 
-    public static long cross(Point O, Point A, Point B) {
-        return (long) ((A.x - O.x) * (B.y - O.y) - (A.y - O.y) * (B.x - O.x));
+    public int cross(Point O, Point A, Point B) {
+        double result = (A.x - O.x) * (B.y - O.y) - (A.y - O.y) * (B.x - O.x);
+        if (result > 0) {
+            return 1;
+        } else if (result == 0) {
+            return 0;
+        } else {
+            return -1;
+        }
+//        return (long) ((A.x - O.x) * (B.y - O.y) - (A.y - O.y) * (B.x - O.x));
     }
 
-    public static Point[] convex_hull(Point[] P) {
+    public Point[] convex_hull(Point[] P) {
 
         if (P.length > 1) {
             int n = P.length, k = 0;
@@ -69,23 +73,23 @@ public class ConvexHull {
         }
     }
 
-    public static void main(String[] args) throws IOException {
-
-        BufferedReader f = new BufferedReader(new FileReader("data/hull.in"));    // "hull.in"  Input Sample => size x y x y x y x y
-        StringTokenizer st = new StringTokenizer(f.readLine());
-        Point[] p = new Point[Integer.parseInt(st.nextToken())];
-        for (int i = 0; i < p.length; i++) {
-            p[i] = new Point();
-            p[i].x = Double.parseDouble(st.nextToken()); // Read X coordinate
-            p[i].y = Double.parseDouble(st.nextToken()); // Read y coordinate
-        }
-
-        Point[] hull = convex_hull(p).clone();
-
-        for (int i = 0; i < hull.length; i++) {
-            if (hull[i] != null)
-                System.out.print(hull[i]);
-        }
-    }
+//    public static void main(String[] args) throws IOException {
+//
+//        BufferedReader f = new BufferedReader(new FileReader("data/hull.in"));    // "hull.in"  Input Sample => size x y x y x y x y
+//        StringTokenizer st = new StringTokenizer(f.readLine());
+//        Point[] p = new Point[Integer.parseInt(st.nextToken())];
+//        for (int i = 0; i < p.length; i++) {
+//            p[i] = new Point();
+//            p[i].x = Double.parseDouble(st.nextToken()); // Read X coordinate
+//            p[i].y = Double.parseDouble(st.nextToken()); // Read y coordinate
+//        }
+//
+//        Point[] hull = convex_hull(p).clone();
+//
+//        for (int i = 0; i < hull.length; i++) {
+//            if (hull[i] != null)
+//                System.out.print(hull[i]);
+//        }
+//    }
 
 }
