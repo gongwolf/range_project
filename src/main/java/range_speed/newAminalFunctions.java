@@ -178,6 +178,8 @@ public class newAminalFunctions {
 
     public void convexHull() {
 
+        BufferedWriter area_bw = null;
+        FileWriter area_fw = null;
         BufferedWriter bw = null;
         FileWriter fw = null;
 
@@ -185,29 +187,33 @@ public class newAminalFunctions {
 
 
             File file = new File("MCP_Results.csv");
+            File area_file = new File("MCP_Area_Results.csv");
             if (file.exists()) {
                 file.delete();
+            }
+
+            if (area_file.exists()) {
+                area_file.delete();
             }
 
             fw = new FileWriter(file.getAbsoluteFile(), true);
             bw = new BufferedWriter(fw);
 
-            bw.write("Cow_id,Date,Pre_MCP,Day_MCP,Post_MCP,AllDay_MCP\n");
+
+            area_fw = new FileWriter(area_file.getAbsoluteFile(), true);
+            area_bw = new BufferedWriter(area_fw);
+
+            area_bw.write("Cow_id,Date,Pre_MCP_area,Day_MCP_Area,Post_MCP_Area,All_Day_area\n");
+            bw.write("Cow_id,Date,Daily_period,Easting,Northing\n");
 
 
             List<String> sorted_cow_List = new ArrayList(this.cowList);
             Collections.sort(sorted_cow_List, new comparatorStr());
-//            System.out.println(dateList.size());
             List<String> sorted_date_List = new ArrayList(this.dateList);
             Collections.sort(sorted_date_List, new comparatorDate());
 
             for (String cowid : sorted_cow_List) {
-//                System.out.println(cowid);
                 for (String date : sorted_date_List) {
-//                if (date.equals("3/15/2005")) {
-////                if (!date.equals("")) {
-
-                    //                System.out.println(date);
                     HashSet<Pair<Double, Double>> pre_points = this.pre_pointsMap.get(cowid).get(date);
                     HashSet<Pair<Double, Double>> day_points = this.day_pointsMap.get(cowid).get(date);
                     HashSet<Pair<Double, Double>> post_points = this.post_pointsMap.get(cowid).get(date);
@@ -219,46 +225,73 @@ public class newAminalFunctions {
 
 //                System.out.println(date);
                     StringBuffer sb = new StringBuffer();
-                    sb.append(cowid).append(",").append(date).append(",");
+                    StringBuffer a_sb = new StringBuffer();
 
-                    if (pre_points == null) {
-                        sb.append("").append(",");
-                    } else {
+                    a_sb.append(cowid).append(",").append(date).append(",");
+
+                    if (pre_points != null) {
                         allDay_points.addAll(pre_points);
-                        sb.append(FindConvexHull(pre_points)).append(",");
-
+                        Point[] convex_points = FindConvexHull(pre_points);
+                        for (int i = 0; i < convex_points.length; i++) {
+                            if (convex_points[i] != null) {
+                                sb.append(cowid).append(",").append(date).append(",").append("Pre_MCP").append(",");
+                                sb.append(convex_points[i].x).append(",");
+                                sb.append(convex_points[i].y).append("\n");
+                            }
+                        }
+                        a_sb.append(convex_area(convex_points)).append(",");
+                    } else {
+                        a_sb.append(",");
                     }
 
-                    if (day_points == null) {
-//                        System.out.println("|day _ " + cowid + " _ " + date);
-                        sb.append("").append(",");
-                    } else {
-//                        FindConvexHull(day_points);
+                    if (day_points != null) {
                         allDay_points.addAll(day_points);
-//                        FindConvexHull(day_points);
-                        sb.append(FindConvexHull(day_points)).append(",");
-
-                    }
-
-                    if (post_points == null) {
-//                        System.out.println("|post _ " + cowid + " _ " + date);
-                        sb.append("").append(",");
+                        Point[] convex_points = FindConvexHull(day_points);
+                        for (int i = 0; i < convex_points.length; i++) {
+                            if (convex_points[i] != null) {
+                                sb.append(cowid).append(",").append(date).append(",").append("Day_MCP").append(",");
+                                sb.append(convex_points[i].x).append(",");
+                                sb.append(convex_points[i].y).append("\n");
+                            }
+                        }
+                        a_sb.append(convex_area(convex_points)).append(",");
                     } else {
-                        allDay_points.addAll(post_points);
-                        sb.append(FindConvexHull(post_points)).append(",");
-
+                        a_sb.append(",");
                     }
 
-                    sb.append(FindConvexHull(allDay_points)).append("\n");
+                    if (post_points != null) {
+                        allDay_points.addAll(post_points);
+                        Point[] convex_points = FindConvexHull(post_points);
+                        for (int i = 0; i < convex_points.length; i++) {
+                            if (convex_points[i] != null) {
+                                sb.append(cowid).append(",").append(date).append(",").append("Post_MCP").append(",");
+                                sb.append(convex_points[i].x).append(",");
+                                sb.append(convex_points[i].y).append("\n");
+                            }
+                        }
+                        a_sb.append(convex_area(convex_points)).append(",");
+
+                    } else {
+                        a_sb.append(",");
+                    }
+
+                    Point[] convex_points = FindConvexHull(allDay_points);
+                    for (int i = 0; i < convex_points.length; i++) {
+                        if (convex_points[i] != null) {
+                            sb.append(cowid).append(",").append(date).append(",").append("All_Day_MCP").append(",");
+                            sb.append(convex_points[i].x).append(",");
+                            sb.append(convex_points[i].y).append("\n");
+                        }
+                    }
+                    a_sb.append(convex_area(convex_points)).append("\n");
+
                     bw.write(sb.toString());
+                    area_bw.write(a_sb.toString());
 //                }
-
-
                 }
 //            break;
             }
         } catch (IOException e) {
-
             e.printStackTrace();
 
         } finally {
@@ -270,7 +303,15 @@ public class newAminalFunctions {
 
                 if (fw != null)
                     fw.close();
+
+                if (area_bw != null)
+                    area_bw.close();
+
+                if (area_fw != null)
+                    area_fw.close();
+
                 System.out.println("Done!! See MCP_Results.csv for MCP of each cow for each day.");
+                System.out.println("Done!! See MCP_Area_Results.csv for MCP of each cow for each day.");
 
             } catch (IOException ex) {
 
@@ -311,7 +352,7 @@ public class newAminalFunctions {
         return -1;
     }
 
-    public String FindConvexHull(HashSet<Pair<Double, Double>> points) {
+    public Point[] FindConvexHull(HashSet<Pair<Double, Double>> points) {
         Point[] p = new Point[points.size()];
         int i = 0;
         for (Pair<Double, Double> dd : points) {
@@ -324,28 +365,30 @@ public class newAminalFunctions {
 
 
         Point[] hull = ch.convex_hull(p).clone();
-        double[] xlist = new double[hull.length];
-        double[] ylist = new double[hull.length];
-        for (i = 0; i < hull.length; i++) {
-            if (hull[i] != null) {
-                xlist[i] = hull[i].x;
-                ylist[i] = hull[i].y;
-            }
-        }
-        StringBuffer sb = new StringBuffer();
-        sb.append("[");
-        for (i = 0; i < hull.length; i++) {
-            sb.append(xlist[i]);
-            if (i != hull.length - 1)
-                sb.append(";");
-        }
-        sb.append("]|[");
-        for (i = 0; i < hull.length; i++) {
-            sb.append(ylist[i]);
-            if (i != hull.length - 1)
-                sb.append(";");
-        }
-        sb.append("]");
+//        double[] xlist = new double[hull.length];
+//        double[] ylist = new double[hull.length];
+//        for (i = 0; i < hull.length; i++) {
+//            if (hull[i] != null) {
+//                xlist[i] = hull[i].x;
+//                ylist[i] = hull[i].y;
+//            }
+//        }
+
+        return hull;
+//        StringBuffer sb = new StringBuffer();
+//        sb.append("[");
+//        for (i = 0; i < hull.length; i++) {
+//            sb.append(xlist[i]);
+//            if (i != hull.length - 1)
+//                sb.append(";");
+//        }
+//        sb.append("]|[");
+//        for (i = 0; i < hull.length; i++) {
+//            sb.append(ylist[i]);
+//            if (i != hull.length - 1)
+//                sb.append(";");
+//        }
+//        sb.append("]");
 //        sb.append("plt.plot([");
 //        for (i = 0; i < hull.length; i++) {
 //            sb.append(xlist[i]);
@@ -366,7 +409,25 @@ public class newAminalFunctions {
 //        }
 //
 //        System.out.println("plt.plot([" + xlist[i] + "," + xlist[0] + "],[" + ylist[i] + "," + ylist[0] + "],color='r', linewidth=0.5)");
-        return sb.toString();
+//        return sb.toString();
 //        return "";
+    }
+
+    public double convex_area(Point[] pin_s) {
+        double area = 0;
+        for (int i = 0; i < pin_s.length; i++) {
+            int i1 = i + 1;
+            int i2 = i - 1;
+            if (i1 == pin_s.length) {
+                i1 = 0;
+            }
+
+            if (i2 == -1) {
+                i2 = pin_s.length - 1;
+            }
+            area += pin_s[i].x * (pin_s[i1].y - pin_s[i2].y);
+        }
+        area /= 2.0;
+        return area;
     }
 }
