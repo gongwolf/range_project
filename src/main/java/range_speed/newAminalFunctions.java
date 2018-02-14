@@ -222,10 +222,8 @@ public class newAminalFunctions {
                     sb.append(cowid).append(",").append(date).append(",");
 
                     if (pre_points == null) {
-//                        System.out.println("|Pre _ " + cowid + " _ " + date);
                         sb.append("").append(",");
                     } else {
-//                        FindConvexHull(pre_points);
                         allDay_points.addAll(pre_points);
                         sb.append(FindConvexHull(pre_points)).append(",");
 
@@ -288,6 +286,7 @@ public class newAminalFunctions {
      * @param Sunset   the sunset time of the date of the input time records
      * @return the type of the current time, 0 is the pre day, 1 is the day time, 2 is the post day
      */
+    //Todo: consider the equal situations, for example, one date&time is equals to the sunrise or sunset time of the day
     public int getPartitionType(String cur_date, String Sunrise, String Sunset) {
         Date Sunrise_D = null;
         Date Sunset_D = null;
