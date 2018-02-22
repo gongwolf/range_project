@@ -5,10 +5,14 @@
       <artifact name="range_project:jar" />
     </artifacts-to-build>
   </component>
+  <component name="BookmarkManager">
+    <bookmark url="file://$PROJECT_DIR$/src/main/java/range_pixel/range_pixel.java" line="435" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="9346ffe7-af71-466d-b9a0-a7da871e6762" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/range_speed/newAminalFunctions.java" afterPath="$PROJECT_DIR$/src/main/java/range_speed/newAminalFunctions.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/range_pixel/range_pixel.java" afterPath="$PROJECT_DIR$/src/main/java/range_pixel/range_pixel.java" />
+      <change beforePath="$PROJECT_DIR$/src/main/resource/META-INF/MANIFEST.MF" afterPath="$PROJECT_DIR$/src/main/resource/META-INF/MANIFEST.MF" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -21,11 +25,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="range_pixel.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="range_pixel.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/range_pixel/range_pixel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="7310">
-              <caret line="435" column="32" lean-forward="false" selection-start-line="435" selection-start-column="0" selection-end-line="436" selection-end-column="0" />
+            <state relative-caret-position="4554">
+              <caret line="327" column="0" lean-forward="false" selection-start-line="327" selection-start-column="0" selection-end-line="327" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -34,8 +38,8 @@
       <file leaf-file-name="TimeCompare.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/range_partition/TimeCompare.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="595">
-              <caret line="37" column="5" lean-forward="false" selection-start-line="14" selection-start-column="4" selection-end-line="37" selection-end-column="5" />
+            <state relative-caret-position="450">
+              <caret line="25" column="25" lean-forward="false" selection-start-line="25" selection-start-column="25" selection-end-line="25" selection-end-column="25" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -46,7 +50,7 @@
       <file leaf-file-name="range_partition.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/range_partition/range_partition.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2040">
+            <state relative-caret-position="2160">
               <caret line="126" column="58" lean-forward="false" selection-start-line="126" selection-start-column="0" selection-end-line="127" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -55,11 +59,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AnimalProject.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="AnimalProject.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/range_speed/AnimalProject.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="425">
-              <caret line="30" column="38" lean-forward="true" selection-start-line="30" selection-start-column="38" selection-end-line="30" selection-end-column="38" />
+            <state relative-caret-position="353">
+              <caret line="26" column="52" lean-forward="false" selection-start-line="26" selection-start-column="52" selection-end-line="26" selection-end-column="52" />
               <folding />
             </state>
           </provider>
@@ -68,8 +72,8 @@
       <file leaf-file-name="newAminalFunctions.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/range_speed/newAminalFunctions.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="476">
-              <caret line="205" column="19" lean-forward="false" selection-start-line="205" selection-start-column="12" selection-end-line="205" selection-end-column="19" />
+            <state relative-caret-position="3762">
+              <caret line="215" column="19" lean-forward="false" selection-start-line="215" selection-start-column="19" selection-end-line="215" selection-end-column="19" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -110,12 +114,12 @@
         <option value="$PROJECT_DIR$/src/main/java/range_pixel/PData.java" />
         <option value="$PROJECT_DIR$/src/main/java/range_partition/TimeCompare.java" />
         <option value="$PROJECT_DIR$/src/main/java/range_partition/range_partition.java" />
-        <option value="$PROJECT_DIR$/src/main/java/range_pixel/range_pixel.java" />
         <option value="$PROJECT_DIR$/src/main/java/range_speed/PData.java" />
         <option value="$PROJECT_DIR$/src/main/java/range_speed/comparatorStr.java" />
         <option value="$PROJECT_DIR$/src/main/java/range_speed/ConvexHull.java" />
         <option value="$PROJECT_DIR$/src/main/java/range_speed/newAminalFunctions.java" />
         <option value="$PROJECT_DIR$/src/main/java/range_speed/AnimalProject.java" />
+        <option value="$PROJECT_DIR$/src/main/java/range_pixel/range_pixel.java" />
       </list>
     </option>
   </component>
@@ -126,17 +130,17 @@
       </MavenImportingSettings>
     </option>
   </component>
-  <component name="ProjectFrameBounds" fullScreen="true">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="805" />
     <option name="y" value="-4" />
-    <option name="width" value="924" />
-    <option name="height" value="1068" />
+    <option name="width" value="922" />
+    <option name="height" value="1060" />
   </component>
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
   <component name="ProjectView">
-    <navigator currentView="ProjectPane" proportions="" version="1">
+    <navigator proportions="" version="1">
       <flattenPackages />
       <showMembers />
       <showModules />
@@ -149,74 +153,7 @@
       <manualOrder />
       <foldersAlwaysOnTop value="true" />
     </navigator>
-    <panes>
-      <pane id="Scratches" />
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
-      <pane id="AndroidView" />
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="range_project" type="b2602c69:ProjectViewProjectNode" />
-              <item name="range_project" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="range_project" type="b2602c69:ProjectViewProjectNode" />
-              <item name="range_project" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="range_project" type="b2602c69:ProjectViewProjectNode" />
-              <item name="range_project" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="range_project" type="b2602c69:ProjectViewProjectNode" />
-              <item name="range_project" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="range_project" type="b2602c69:ProjectViewProjectNode" />
-              <item name="range_project" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="range_partition" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="range_project" type="b2602c69:ProjectViewProjectNode" />
-              <item name="range_project" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="range_pixel" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="range_project" type="b2602c69:ProjectViewProjectNode" />
-              <item name="range_project" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="range_speed" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="range_project" type="b2602c69:ProjectViewProjectNode" />
-              <item name="range_project" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="range_speed" type="462c0819:PsiDirectoryNode" />
-              <item name="ConvexHull.java" type="529ef68f:ClassesTreeStructureProvider$PsiClassOwnerTreeNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-    </panes>
+    <panes />
   </component>
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../bConstrainSkyline" />
@@ -249,7 +186,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.AnimalProject">
+  <component name="RunManager" selected="Application.range_pixel">
     <configuration default="true" type="Applet" factoryName="Applet">
       <option name="HTML_USED" value="false" />
       <option name="WIDTH" value="400" />
@@ -435,9 +372,9 @@
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Application.AnimalProject" />
-        <item index="1" class="java.lang.String" itemvalue="Application.ConvexHull" />
-        <item index="2" class="java.lang.String" itemvalue="Application.range_pixel" />
+        <item index="0" class="java.lang.String" itemvalue="Application.range_pixel" />
+        <item index="1" class="java.lang.String" itemvalue="Application.AnimalProject" />
+        <item index="2" class="java.lang.String" itemvalue="Application.ConvexHull" />
         <item index="3" class="java.lang.String" itemvalue="Application.range_partition" />
         <item index="4" class="java.lang.String" itemvalue="Application.TimeCompare" />
       </list>
@@ -463,7 +400,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1440" height="900" extended-state="0" />
+    <frame x="59" y="-4" width="1861" height="1084" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -474,8 +411,8 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.37277487" sideWeight="0.5041322" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.5090689" sideWeight="0.49586776" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.5089005" sideWeight="0.49586776" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -484,8 +421,8 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -513,8 +450,8 @@
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.5090689" sideWeight="0.49586776" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.5089005" sideWeight="0.49586776" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2567493" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32879582" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -822,28 +759,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/range_speed/comparatorStr.java" />
     <entry file="file://$PROJECT_DIR$/src/main/java/range_speed/PData.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/range_pixel/range_pixel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="7310">
-          <caret line="435" column="32" lean-forward="false" selection-start-line="435" selection-start-column="0" selection-end-line="436" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/range_speed/ConvexHull.java" />
-    <entry file="file://$PROJECT_DIR$/src/main/java/range_partition/TimeCompare.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="595">
-          <caret line="37" column="5" lean-forward="false" selection-start-line="14" selection-start-column="4" selection-end-line="37" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/range_partition/range_partition.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2040">
+        <state relative-caret-position="2160">
           <caret line="126" column="58" lean-forward="false" selection-start-line="126" selection-start-column="0" selection-end-line="127" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -853,8 +772,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/range_speed/newAminalFunctions.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="476">
-          <caret line="205" column="19" lean-forward="false" selection-start-line="205" selection-start-column="12" selection-end-line="205" selection-end-column="19" />
+        <state relative-caret-position="3762">
+          <caret line="215" column="19" lean-forward="false" selection-start-line="215" selection-start-column="19" selection-end-line="215" selection-end-column="19" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -863,8 +782,26 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/range_speed/AnimalProject.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="30" column="38" lean-forward="true" selection-start-line="30" selection-start-column="38" selection-end-line="30" selection-end-column="38" />
+        <state relative-caret-position="353">
+          <caret line="26" column="52" lean-forward="false" selection-start-line="26" selection-start-column="52" selection-end-line="26" selection-end-column="52" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/range_partition/TimeCompare.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="25" column="25" lean-forward="false" selection-start-line="25" selection-start-column="25" selection-end-line="25" selection-end-column="25" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/range_pixel/range_pixel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4554">
+          <caret line="327" column="0" lean-forward="false" selection-start-line="327" selection-start-column="0" selection-end-line="327" selection-end-column="0" />
           <folding />
         </state>
       </provider>
