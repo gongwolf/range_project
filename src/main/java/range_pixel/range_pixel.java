@@ -15,6 +15,7 @@ public class range_pixel {
 
     HashMap<Long, Pair<Double, Double>> pixelList = new HashMap<Long, Pair<Double, Double>>(); //pixel_id -> <northing,easting>
     HashMap<String, HashMap<Long, HashSet<String>>> result = new HashMap<>(); //cowID—> Hashmap<pixel_id,data in the pixel of the cow>
+    HashMap<String, HashMap<Long, Integer>> visited_result = new HashMap<>(); //cowID—> Hashmap<pixel_id,data in the pixel of the cow>
     HashMap<String, HashMap<Long, HashMap<Long, HashSet<String>>>> yearInfos = new HashMap<>();
     private int range_size = 30;
     private int min_speed = 5;
@@ -34,6 +35,7 @@ public class range_pixel {
         rp.setYearinfos();
         rp.printResult2();
         rp.printResult3();
+        rp.printResult4();
     }
 
     private void readTheFileName() {
@@ -123,6 +125,41 @@ public class range_pixel {
     }
 
 
+    private void printResult4() {
+        File file = new File("result4.csv");
+
+        if (file.exists()) {
+            file.delete();
+        }
+
+        try (FileWriter fw = new FileWriter("result4.csv", true);
+             BufferedWriter bw = new BufferedWriter(fw);
+             PrintWriter out = new PrintWriter(bw)) {
+            out.println("Cow_id,Pixel ID,Number of visited times,time spent,vegetable class,Northing,Easting");
+            for (Map.Entry<String, HashMap<Long, Integer>> cow_infos : this.visited_result.entrySet()) {
+                String cowid = cow_infos.getKey();
+                for (Map.Entry<Long, Integer> pixel_infos : cow_infos.getValue().entrySet()) {
+                    long pixel_id = pixel_infos.getKey();
+                    int times = pixel_infos.getValue();
+                    long spent = times * 5;
+                    int pixelVegClass = this.pixel_veg_class.get(pixel_id);
+                    out.println(cowid + "," + pixel_id + "," + times + "," + spent + "," + pixelVegClass
+                            + "," + this.pixelList.get(pixel_id).getKey() + "," + this.pixelList.get(pixel_id).getValue());
+                }
+            }
+
+
+            out.close();
+
+            System.out.println("Done!! See result4.csv,  how much time each animal spends in each cell (in minutes).");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
     private void printResult3() {
         File file = new File("result3.csv");
 
@@ -135,7 +172,7 @@ public class range_pixel {
              PrintWriter out = new PrintWriter(bw)) {
 
 
-            out.println("Cow_id, Years, Pixel_id, average days the cow visited in each pixel in this year, average interval days the cow visited back in each pixel");
+            out.println("Cow_id, Years, Number_of_Pixels, average days the cow visited in each pixel in this year, average interval days the cow visited back in each pixel");
             for (Map.Entry<String, HashMap<Long, HashMap<Long, HashSet<String>>>> cow_infos : yearInfos.entrySet()) {
                 String cowid = cow_infos.getKey();
                 HashMap<Long, ArrayList<Double>> yearsCounts = new HashMap<>();
@@ -196,7 +233,7 @@ public class range_pixel {
              PrintWriter out = new PrintWriter(bw)) {
 
 
-            out.println("Cow_id, Years, Pixel_id, times of visiting back to pixel, period value, vegetable class");
+            out.println("Cow_id, Years, Pixel_id, times of visiting back to pixel, period value, vegetable class,Northing,Easting");
 
             for (Map.Entry<String, HashMap<Long, HashMap<Long, HashSet<String>>>> cow_infos : yearInfos.entrySet()) {
                 String cowid = cow_infos.getKey();
@@ -209,7 +246,8 @@ public class range_pixel {
                         String period = size - 1 != 0 ? String.valueOf((double) diff / (size - 1)) : "\\N";
 //                        out.println(cowid + "," + year + "," + pixel_id + "," + size + "," + period);
                         int pixelVegClass = pixel_veg_class.get(pixel_id);
-                        out.println(cowid + "," + year + "," + pixel_id + "," + size + "," + period+","+pixelVegClass);
+                        out.println(cowid + "," + year + "," + pixel_id + "," + size + "," + period + "," + pixelVegClass
+                                + "," + this.pixelList.get(pixel_id).getKey() + "," + this.pixelList.get(pixel_id).getValue());
 
                     }
                 }
@@ -234,7 +272,7 @@ public class range_pixel {
         try (FileWriter fw = new FileWriter("result1.csv", true);
              BufferedWriter bw = new BufferedWriter(fw);
              PrintWriter out = new PrintWriter(bw)) {
-            out.println("Cow_id, Pixel_id, times of visiting back to pixel, Interval days, Vegetable class");
+            out.println("Cow_id, Pixel_id, times of visiting back to pixel, Interval days, Vegetable class,Northing,Easting");
 
             for (Map.Entry<String, HashMap<Long, HashSet<String>>> cow_infos : this.result.entrySet()) {
                 String cowid = cow_infos.getKey();
@@ -245,7 +283,8 @@ public class range_pixel {
 //                    out.println(cowid + "," + pixel_id + "," + size + "," + diff);
 
                     int pixelVegClass = this.pixel_veg_class.get(pixel_id);
-                    out.println(cowid + "," + pixel_id + "," + size + "," + diff+","+pixelVegClass);
+                    out.println(cowid + "," + pixel_id + "," + size + "," + diff + "," + pixelVegClass
+                            + "," + this.pixelList.get(pixel_id).getKey() + "," + this.pixelList.get(pixel_id).getValue());
                 }
             }
 
@@ -327,7 +366,7 @@ public class range_pixel {
                 Double pixelEasting = Double.parseDouble(infos[2]);
                 int pixelVegClass = Integer.valueOf(infos[3]);
                 this.pixelList.put(pixelID, new Pair<>(pixelNorthing, pixelEasting));
-                this.pixel_veg_class.put(pixelID,pixelVegClass);
+                this.pixel_veg_class.put(pixelID, pixelVegClass);
 //                System.out.println(pixelID+","+pixelNorthing+","+pixelEasting+",");
             }
             br.close();
@@ -370,13 +409,35 @@ public class range_pixel {
                 String date = infos[2];
                 double northing = Double.parseDouble(infos[3]);
                 double easting = Double.parseDouble(infos[4]);
+                long pixelId = getPixelID(northing, easting); //get the pixel that could include the current gps record
+
+
+                //Store the visited information
+                if(pixelId!=-1) {
+                    if (this.visited_result.containsKey(cowId)) {
+                        HashMap<Long, Integer> pixelMapping = this.visited_result.get(cowId);
+                        if (pixelMapping.containsKey(pixelId)) {
+                            pixelMapping.put(pixelId, pixelMapping.get(pixelId) + 1);
+                            visited_result.put(cowId, pixelMapping);
+                        } else {
+                            pixelMapping.put(pixelId, 1);
+                            this.visited_result.put(cowId, pixelMapping);
+                        }
+
+                    } else {
+                        HashMap<Long, Integer> pixelMapping = new HashMap<>();
+                        pixelMapping.put(pixelId, 1);
+                        this.visited_result.put(cowId, pixelMapping);
+                    }
+                }
+                //System.out.println(visited_result.size());
 
                 /*previous record is empty.
                   1. just read the second line.
                   2. Different cowid
                   3. Different date
                 */
-                if (cowId.equals(pd.cowId) && date.equals(pd.date)) // if the same cow but the GPS record is in a different day
+                if (cowId.equals(pd.cowId) && date.equals(pd.date)) // if the same cow but the GPS record is in the same day
                 {
                     //calculate the speed of the cow start from the previous record
                     double distance = Math.abs(Math.sqrt(Math.pow(pd.easting - easting, 2) + Math.pow(pd.northing - northing, 2)));
@@ -387,7 +448,7 @@ public class range_pixel {
 
                     //if the speed need further processing
                     if (speed >= this.min_speed && speed <= this.max_speed) {
-                        long pixelId = getPixelID(northing, easting); //get the pixel that could include the current gps record
+                        pixelId = getPixelID(northing, easting); //get the pixel that could include the current gps record
 //                        System.out.println(linenumber+" "+pixelId);
 //                        if (cowId.equals("1") && pixelId == 2) {
 //                            System.out.println(Math.pow(pd.easting - easting, 2));
