@@ -8,9 +8,9 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class range_pixel {
-    String pixelPath = "data/pixel/pixel.csv";
+    String pixelPath = "pixel.csv";
     //    String GPSData = "data/pixel/sample_gps.csv";
-    String GPSData = "data/pixel/coordinate_points.csv";
+    String GPSData = "coordinate_points.csv";
 
 
     HashMap<Long, Pair<Double, Double>> pixelList = new HashMap<Long, Pair<Double, Double>>(); //pixel_id -> <northing,easting>
