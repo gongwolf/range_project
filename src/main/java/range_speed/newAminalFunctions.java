@@ -12,12 +12,18 @@ public class newAminalFunctions {
 
     String dataFile = "";
     String TimeFile = "";
+    int rest_speed = 5;
+    int grazing_speed = 10;
+    int traveling_speed = 50;
 
     HashMap<String, HashMap<String, ArrayList<Double[]>>> pointsMap = new HashMap<>(); //cowid -> <date, List of points>
+    HashMap<String, HashSet<Pair<String, double[]>>> points_time_Map = new HashMap<>(); //cowid -> <date, List of points>
 
     HashMap<String, HashMap<String, HashSet<Pair<Double, Double>>>> pre_pointsMap = new HashMap<>(); //cowid -> <date, List of points>
     HashMap<String, HashMap<String, HashSet<Pair<Double, Double>>>> day_pointsMap = new HashMap<>(); //cowid -> <date, List of points>
     HashMap<String, HashMap<String, HashSet<Pair<Double, Double>>>> post_pointsMap = new HashMap<>(); //cowid -> <date, List of points>
+
+
     HashSet<String> dateList = new HashSet<>();
     HashSet<String> cowList = new HashSet<>();
     DateFormat TimeFormatter = new SimpleDateFormat("hh:mm:ss a");
@@ -93,7 +99,19 @@ public class newAminalFunctions {
                     this.cowList.add(c_cowid);
                     this.dateList.add(c_date);
 
-//                    System.out.println(linenumber+","+c_cowid + " , " + c_date + " , " + c_time + " , " + c_northing + " , " + c_easting);
+//                    System.out.println(linenumber + "," + c_cowid + " , " + c_date + " , " + c_time + " , " + c_northing + " , " + c_easting);
+
+
+                    //store data to the structure which is used to calculate the proportions of different type of movement
+                    if (this.points_time_Map.containsKey(c_cowid)) {
+                        HashSet<Pair<String, double[]>> d = points_time_Map.get(c_cowid);
+                        d.add(new Pair<>(c_date + " " + c_time, new double[]{c_northing, c_easting}));
+                    } else {
+                        HashSet<Pair<String, double[]>> d = new HashSet<>();
+                        d.add(new Pair<>(c_date + " " + c_time, new double[]{c_northing, c_easting}));
+                        this.points_time_Map.put(c_cowid, d);
+                    }
+
 
                     String sun_rise = timeObj.get(c_date).getKey();
                     String sun_set = timeObj.get(c_date).getValue();
@@ -159,7 +177,6 @@ public class newAminalFunctions {
                         }
 
                     }
-
 
                 } else {
 //                    System.out.println(linenumber + ":" + line);
@@ -375,42 +392,6 @@ public class newAminalFunctions {
 //        }
 
         return hull;
-//        StringBuffer sb = new StringBuffer();
-//        sb.append("[");
-//        for (i = 0; i < hull.length; i++) {
-//            sb.append(xlist[i]);
-//            if (i != hull.length - 1)
-//                sb.append(";");
-//        }
-//        sb.append("]|[");
-//        for (i = 0; i < hull.length; i++) {
-//            sb.append(ylist[i]);
-//            if (i != hull.length - 1)
-//                sb.append(";");
-//        }
-//        sb.append("]");
-//        sb.append("plt.plot([");
-//        for (i = 0; i < hull.length; i++) {
-//            sb.append(xlist[i]);
-//            if (i != hull.length - 1)
-//                sb.append(",");
-//        }
-//        sb.append("],[");
-//        for (i = 0; i < hull.length; i++) {
-//            sb.append(ylist[i]);
-//            if (i != hull.length - 1)
-//                sb.append(",");
-//        }
-//        sb.append("],'ro')");
-//
-//        System.out.println(sb);
-//        for (i = 0; i < hull.length - 1; i++) {
-//            System.out.println("plt.plot([" + xlist[i] + "," + xlist[i + 1] + "],[" + ylist[i] + "," + ylist[i + 1] + "],color='r', linewidth=0.5)");
-//        }
-//
-//        System.out.println("plt.plot([" + xlist[i] + "," + xlist[0] + "],[" + ylist[i] + "," + ylist[0] + "],color='r', linewidth=0.5)");
-//        return sb.toString();
-//        return "";
     }
 
     public double convex_area(Point[] pin_s) {
@@ -429,5 +410,40 @@ public class newAminalFunctions {
         }
         area /= 2.0;
         return area;
+    }
+
+    public void movementPartition() {
+        System.out.println(this.points_time_Map.size());
+        HashSet<Pair<String, double[]>> dtp_list_of_cow = this.points_time_Map.get("84");
+
+        List<String> sorted_date_List = new ArrayList(this.dateList);
+        Collections.sort(sorted_date_List, new comparatorDate());
+
+        TreeSet<Pair<String, double[]>> ordered_time_list = new TreeSet<>(new SortByTime());
+        ordered_time_list.addAll(dtp_list_of_cow);
+        ArrayList<Pair<String, double[]>> t_list = new ArrayList<>(ordered_time_list);
+
+
+        HashMap<String, Pair<Integer, Integer>[][]> result = new HashMap<>(); //date -->>  row(time_type) column(movement type)
+
+        for (int i = 1; i < t_list.size(); i++) {
+            System.out.println(t_list.get(i).getKey());
+            String c_date = t_list.get(i).getKey().split(" ")[0];
+            String c_time = t_list.get(i).getKey().split(" ")[1];
+
+            if (result.containsKey(c_date)) {
+
+            } else {
+                Pair<Integer, Integer>[][] p_array = new Pair[4][3];
+                for (int j = 0; j < p_array.length; j++) {
+                    for (int k = 0; k < p_array[0].length; k++) {
+                        p_array[j][k] = new Pair<>(0, 0);
+                    }
+                }
+            }
+
+        }
+
+
     }
 }
