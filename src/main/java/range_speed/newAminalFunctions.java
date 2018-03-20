@@ -13,8 +13,8 @@ public class newAminalFunctions {
     String dataFile = "";
     String TimeFile = "";
     int rest_speed = 5;
-    int grazing_speed = 10;
-    int traveling_speed = 50;
+    int grazing_speed = 20;
+//    int traveling_speed = 50;
 
     HashMap<String, HashMap<String, ArrayList<Double[]>>> pointsMap = new HashMap<>(); //cowid -> <date, List of points>
     HashMap<String, HashSet<Pair<String, double[]>>> points_time_Map = new HashMap<>(); //cowid -> <date, List of points>
@@ -27,15 +27,18 @@ public class newAminalFunctions {
     HashSet<String> dateList = new HashSet<>();
     HashSet<String> cowList = new HashSet<>();
     DateFormat TimeFormatter = new SimpleDateFormat("hh:mm:ss a");
+    DateFormat DateTimeFormatter = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
 
 
     HashMap<String, Pair<String, String>> timeObj = new HashMap<>();
     ConvexHull ch = new ConvexHull();
 
 
-    public newAminalFunctions(String fileDataPosition, String fileTime) {
+    public newAminalFunctions(String fileDataPosition, String fileTime, int rest_speed, int grazing_speed) {
         this.dataFile = fileDataPosition;
         this.TimeFile = fileTime;
+        this.rest_speed = rest_speed;
+        this.grazing_speed = grazing_speed;
 
 //        System.out.println(this.dataFile);
 //        System.out.println(this.TimeFile);
@@ -92,7 +95,7 @@ public class newAminalFunctions {
                 if (infos.length >= 5) {
                     String c_cowid = infos[0];
                     String c_date = infos[1];
-                    String c_time = infos[2];
+                    String c_time = infos[2].trim();
                     double c_northing = Double.valueOf(infos[3]);
                     double c_easting = Double.valueOf(infos[4]);
 
@@ -362,7 +365,8 @@ public class newAminalFunctions {
                 return 1;
             }
         } catch (ParseException e) {
-            System.out.println("There is something wrong with your time formation, please check it");
+            System.out.println(cur_date + " " + Sunrise + " " + Sunset);
+            System.out.println("There is something wrong with your time formation, please check it 3");
             System.exit(0);
         }
 
@@ -413,37 +417,164 @@ public class newAminalFunctions {
     }
 
     public void movementPartition() {
-        System.out.println(this.points_time_Map.size());
-        HashSet<Pair<String, double[]>> dtp_list_of_cow = this.points_time_Map.get("84");
+        BufferedWriter bw = null;
+        FileWriter fw = null;
+
+        try {
+            File file = new File("movement_partition.csv");
+            if (file.exists()) {
+                file.delete();
+            }
+
+            fw = new FileWriter(file.getAbsoluteFile(), true);
+            bw = new BufferedWriter(fw);
+            bw.write("Cow_id,Date,r_pre,g_pre,t_pre,r_day,g_day,t_day,r_post,g_post,t_post,r_total,g_total,t_total\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (bw != null)
+                    bw.close();
+                if (fw != null)
+                    fw.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+
+        TreeMap<String, HashSet<Pair<String, double[]>>> s_by_cowId = new TreeMap<>(new SortByCowid());
+        s_by_cowId.putAll(this.points_time_Map);
+
+        for (String e : s_by_cowId.keySet()) {
+            movementParitionForCow(e);
+        }
+
+        System.out.println("Done!! See movement_partition.csv for the movement for each cow for each day");
+
+    }
+
+
+    public int movement_type(double speed) {
+        if (speed <= this.rest_speed) {
+            return 0;
+        } else if (speed <= this.grazing_speed) {
+            return 1;
+        } else {
+            return 2;
+        }
+    }
+
+    public void movementParitionForCow(String cowid) {
+
+        BufferedWriter area_bw = null;
+        FileWriter area_fw = null;
+        BufferedWriter bw = null;
+        FileWriter fw = null;
+
+
+        HashSet<Pair<String, double[]>> dtp_list_of_cow = this.points_time_Map.get(cowid);
 
         List<String> sorted_date_List = new ArrayList(this.dateList);
         Collections.sort(sorted_date_List, new comparatorDate());
 
+        //Sorted the records by date and time, and put them into one ArrayList
         TreeSet<Pair<String, double[]>> ordered_time_list = new TreeSet<>(new SortByTime());
         ordered_time_list.addAll(dtp_list_of_cow);
         ArrayList<Pair<String, double[]>> t_list = new ArrayList<>(ordered_time_list);
 
 
-        HashMap<String, Pair<Integer, Integer>[][]> result = new HashMap<>(); //date -->>  row(time_type) column(movement type)
+        HashMap<String, int[][]> result = new HashMap<>(); //date -->>  row(time_type) column(movement type)
 
         for (int i = 1; i < t_list.size(); i++) {
-            System.out.println(t_list.get(i).getKey());
             String c_date = t_list.get(i).getKey().split(" ")[0];
-            String c_time = t_list.get(i).getKey().split(" ")[1];
+            String c_time = t_list.get(i).getKey().split(" ")[1] + " " + t_list.get(i).getKey().split(" ")[2];
 
-            if (result.containsKey(c_date)) {
+            double c_north = t_list.get(i).getValue()[0];
+            double c_east = t_list.get(i).getValue()[1];
 
-            } else {
-                Pair<Integer, Integer>[][] p_array = new Pair[4][3];
-                for (int j = 0; j < p_array.length; j++) {
-                    for (int k = 0; k < p_array[0].length; k++) {
-                        p_array[j][k] = new Pair<>(0, 0);
-                    }
+            double p_north = t_list.get(i - 1).getValue()[0];
+            double p_east = t_list.get(i - 1).getValue()[1];
+
+            try {
+                Date c_d = this.DateTimeFormatter.parse(t_list.get(i).getKey());
+                Date p_d = this.DateTimeFormatter.parse(t_list.get(i - 1).getKey());
+
+                long differ_mins = (c_d.getTime() - p_d.getTime()) / 1000 / 60;
+
+                double c_speed = Math.sqrt(Math.pow(c_north - p_north, 2) + Math.pow(c_east - p_east, 2)) / differ_mins;
+                int m_type = movement_type(c_speed);//get movement type
+
+                String sun_rise = timeObj.get(c_date).getKey();
+                String sun_set = timeObj.get(c_date).getValue();
+                int t_type = getPartitionType(c_time, sun_rise, sun_set); //get
+//                System.out.println(t_list.get(i).getKey() + " " + differ_mins + " " + c_speed+" "+m_type+" ");
+
+                if (result.containsKey(c_date)) {
+                    int[][] p_array = result.get(c_date);
+                    p_array[m_type][t_type] += 1;
+                } else {
+                    int[][] p_array = new int[3][3];
+                    p_array[m_type][t_type] = 1;
+                    result.put(c_date, p_array);
                 }
-            }
 
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
 
 
+        try {
+            File file = new File("movement_partition.csv");
+            fw = new FileWriter(file.getAbsoluteFile(), true);
+            bw = new BufferedWriter(fw);
+            TreeMap<String, int[][]> sorted_result = new TreeMap<>(new SortByDate());
+            sorted_result.putAll(result);
+            for (Map.Entry<String, int[][]> e : sorted_result.entrySet()) {
+                int[][] p_array = e.getValue();
+
+                int pre_t = p_array[0][0] + p_array[1][0] + p_array[2][0];
+                int day_t = p_array[0][1] + p_array[1][1] + p_array[2][1];
+                int post_t = p_array[0][2] + p_array[1][2] + p_array[2][2];
+                int total_t = pre_t + day_t + post_t;
+
+                double r_pre_p = p_array[0][0] * 1.0 / pre_t; //rest_pre_percentage
+                double g_pre_p = p_array[1][0] * 1.0 / pre_t; //graze_pre_percentage
+                double t_pre_p = p_array[2][0] * 1.0 / pre_t; //travel_pre_percentage
+
+
+                double r_day_p = p_array[0][1] * 1.0 / day_t; //rest_day_percentage
+                double g_day_p = p_array[1][1] * 1.0 / day_t; //graze_day_percentage
+                double t_day_p = p_array[2][1] * 1.0 / day_t; //travel_day_percentage
+
+                double r_post_p = p_array[0][2] * 1.0 / post_t; //rest_post_percentage
+                double g_post_p = p_array[1][2] * 1.0 / post_t; //graze_post_percentage
+                double t_post_p = p_array[2][2] * 1.0 / post_t; //travel_post_percentage
+
+
+                double r_total_p = (p_array[0][0] + p_array[0][1] + p_array[0][2]) * 1.0 / total_t; //rest_total_percentage
+                double g_total_p = (p_array[1][0] + p_array[1][1] + p_array[1][2]) * 1.0 / total_t; //graze_total_percentage
+                double t_total_p = (p_array[2][0] + p_array[2][1] + p_array[2][2]) * 1.0 / total_t; //travel_total_percentage
+
+                bw.write(cowid+","+e.getKey() + ",");
+                bw.write(r_pre_p + "," + g_pre_p + "," + t_pre_p + ",");
+                bw.write(r_day_p + "," + g_day_p + "," + t_day_p + ",");
+                bw.write(r_post_p + "," + g_post_p + "," + t_post_p + ",");
+                bw.write(r_total_p + "," + g_total_p + "," + t_total_p+"\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (bw != null)
+                    bw.close();
+                if (fw != null)
+                    fw.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
     }
 }

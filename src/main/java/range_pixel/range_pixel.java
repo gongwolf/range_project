@@ -20,7 +20,8 @@ public class range_pixel {
     private int range_size = 30;
     private int min_speed = 5;
     private int max_speed = 100;
-    private HashMap<Long, Integer> pixel_veg_class = new HashMap<>();//pix
+    private HashMap<Long, String> pixel_extra_info = new HashMap<>();//pix
+    private String extra_title="";
 
     public static void main(String args[]) {
         range_pixel rp = new range_pixel();
@@ -135,16 +136,16 @@ public class range_pixel {
         try (FileWriter fw = new FileWriter("result4.csv", true);
              BufferedWriter bw = new BufferedWriter(fw);
              PrintWriter out = new PrintWriter(bw)) {
-            out.println("Cow_id,Pixel ID,Number of visited times,time spent,vegetable class,Northing,Easting");
+            out.println("Cow_id,Pixel ID,Number of visited times,time spent,"+this.extra_title+"Northing,Easting");
             for (Map.Entry<String, HashMap<Long, Integer>> cow_infos : this.visited_result.entrySet()) {
                 String cowid = cow_infos.getKey();
                 for (Map.Entry<Long, Integer> pixel_infos : cow_infos.getValue().entrySet()) {
                     long pixel_id = pixel_infos.getKey();
                     int times = pixel_infos.getValue();
                     long spent = times * 5;
-                    int pixelVegClass = this.pixel_veg_class.get(pixel_id);
+                    String pixelVegClass = this.pixel_extra_info.get(pixel_id);
                     out.println(cowid + "," + pixel_id + "," + times + "," + spent + "," + pixelVegClass
-                            + "," + this.pixelList.get(pixel_id).getKey() + "," + this.pixelList.get(pixel_id).getValue());
+                             + this.pixelList.get(pixel_id).getKey() + "," + this.pixelList.get(pixel_id).getValue());
                 }
             }
 
@@ -233,7 +234,7 @@ public class range_pixel {
              PrintWriter out = new PrintWriter(bw)) {
 
 
-            out.println("Cow_id, Years, Pixel_id, times of visiting back to pixel, period value, vegetable class,Northing,Easting");
+            out.println("Cow_id, Years, Pixel_id, times of visiting back to pixel, period value,"+this.extra_title+"Northing,Easting");
 
             for (Map.Entry<String, HashMap<Long, HashMap<Long, HashSet<String>>>> cow_infos : yearInfos.entrySet()) {
                 String cowid = cow_infos.getKey();
@@ -245,9 +246,9 @@ public class range_pixel {
                         long diff = getDifferDate(pixel_infos.getValue());
                         String period = size - 1 != 0 ? String.valueOf((double) diff / (size - 1)) : "\\N";
 //                        out.println(cowid + "," + year + "," + pixel_id + "," + size + "," + period);
-                        int pixelVegClass = pixel_veg_class.get(pixel_id);
+                        String pixelVegClass = pixel_extra_info.get(pixel_id);
                         out.println(cowid + "," + year + "," + pixel_id + "," + size + "," + period + "," + pixelVegClass
-                                + "," + this.pixelList.get(pixel_id).getKey() + "," + this.pixelList.get(pixel_id).getValue());
+                                + this.pixelList.get(pixel_id).getKey() + "," + this.pixelList.get(pixel_id).getValue());
 
                     }
                 }
@@ -272,7 +273,7 @@ public class range_pixel {
         try (FileWriter fw = new FileWriter("result1.csv", true);
              BufferedWriter bw = new BufferedWriter(fw);
              PrintWriter out = new PrintWriter(bw)) {
-            out.println("Cow_id, Pixel_id, times of visiting back to pixel, Interval days, Vegetable class,Northing,Easting");
+            out.println("Cow_id, Pixel_id, times of visiting back to pixel, Interval days,"+this.extra_title+"Northing,Easting");
 
             for (Map.Entry<String, HashMap<Long, HashSet<String>>> cow_infos : this.result.entrySet()) {
                 String cowid = cow_infos.getKey();
@@ -282,7 +283,7 @@ public class range_pixel {
                     long diff = getDifferDate(pixel_infos.getValue());
 //                    out.println(cowid + "," + pixel_id + "," + size + "," + diff);
 
-                    int pixelVegClass = this.pixel_veg_class.get(pixel_id);
+                    String pixelVegClass = this.pixel_extra_info.get(pixel_id);
                     out.println(cowid + "," + pixel_id + "," + size + "," + diff + "," + pixelVegClass
                             + "," + this.pixelList.get(pixel_id).getKey() + "," + this.pixelList.get(pixel_id).getValue());
                 }
@@ -358,15 +359,33 @@ public class range_pixel {
                 linenumber++;
                 //jump the header
                 if (linenumber == 1) {
+                    //get extra title
+                    String[] infos = line.split(",");
+                    if (infos.length > 3) {
+                        int i = 3;
+                        for (; i < infos.length ; i++) {
+                            this.extra_title += (infos[i] + ",");
+                        }
+                    }
                     continue;
                 }
                 String[] infos = line.split(",");
                 Long pixelID = Long.parseLong(infos[0]);
                 Double pixelNorthing = Double.parseDouble(infos[1]);
                 Double pixelEasting = Double.parseDouble(infos[2]);
-                int pixelVegClass = Integer.valueOf(infos[3]);
+
+                //get extra information values
+                String extraInfo = "";
+                if (infos.length > 3) {
+                    int i = 3;
+                    for (; i < infos.length; i++) {
+                        extraInfo += (infos[i] + ",");
+                    }
+                }
+
+
                 this.pixelList.put(pixelID, new Pair<>(pixelNorthing, pixelEasting));
-                this.pixel_veg_class.put(pixelID, pixelVegClass);
+                this.pixel_extra_info.put(pixelID, extraInfo);
 //                System.out.println(pixelID+","+pixelNorthing+","+pixelEasting+",");
             }
             br.close();
@@ -413,7 +432,7 @@ public class range_pixel {
 
 
                 //Store the visited information
-                if(pixelId!=-1) {
+                if (pixelId != -1) {
                     if (this.visited_result.containsKey(cowId)) {
                         HashMap<Long, Integer> pixelMapping = this.visited_result.get(cowId);
                         if (pixelMapping.containsKey(pixelId)) {
