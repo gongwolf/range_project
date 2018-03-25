@@ -21,7 +21,7 @@ public class range_pixel {
     private int min_speed = 5;
     private int max_speed = 100;
     private HashMap<Long, String> pixel_extra_info = new HashMap<>();//pix
-    private String extra_title="";
+    private String extra_title = "";
 
     public static void main(String args[]) {
         range_pixel rp = new range_pixel();
@@ -136,7 +136,7 @@ public class range_pixel {
         try (FileWriter fw = new FileWriter("result4.csv", true);
              BufferedWriter bw = new BufferedWriter(fw);
              PrintWriter out = new PrintWriter(bw)) {
-            out.println("Cow_id,Pixel ID,Number of visited times,time spent,"+this.extra_title+"Northing,Easting");
+            out.println("Cow_id,Pixel ID,Number of visited times,time spent," + this.extra_title + "Northing,Easting");
             for (Map.Entry<String, HashMap<Long, Integer>> cow_infos : this.visited_result.entrySet()) {
                 String cowid = cow_infos.getKey();
                 for (Map.Entry<Long, Integer> pixel_infos : cow_infos.getValue().entrySet()) {
@@ -145,7 +145,7 @@ public class range_pixel {
                     long spent = times * 5;
                     String pixelVegClass = this.pixel_extra_info.get(pixel_id);
                     out.println(cowid + "," + pixel_id + "," + times + "," + spent + "," + pixelVegClass
-                             + this.pixelList.get(pixel_id).getKey() + "," + this.pixelList.get(pixel_id).getValue());
+                            + this.pixelList.get(pixel_id).getKey() + "," + this.pixelList.get(pixel_id).getValue());
                 }
             }
 
@@ -234,7 +234,7 @@ public class range_pixel {
              PrintWriter out = new PrintWriter(bw)) {
 
 
-            out.println("Cow_id, Years, Pixel_id, times of visiting back to pixel, period value,"+this.extra_title+"Northing,Easting");
+            out.println("Cow_id, Years, Pixel_id, times of visiting back to pixel, period value," + this.extra_title + "Northing,Easting");
 
             for (Map.Entry<String, HashMap<Long, HashMap<Long, HashSet<String>>>> cow_infos : yearInfos.entrySet()) {
                 String cowid = cow_infos.getKey();
@@ -270,10 +270,10 @@ public class range_pixel {
             file.delete();
         }
 
-        try (FileWriter fw = new FileWriter("result1.csv", true);
+        try (FileWriter fw = new FileWriter(file.getName(), true);
              BufferedWriter bw = new BufferedWriter(fw);
              PrintWriter out = new PrintWriter(bw)) {
-            out.println("Cow_id, Pixel_id, times of visiting back to pixel, Interval days,"+this.extra_title+"Northing,Easting");
+            out.println("Cow_id, Pixel_id, times of visiting back to pixel, Interval days,visited back dates list," + this.extra_title + "Northing,Easting");
 
             for (Map.Entry<String, HashMap<Long, HashSet<String>>> cow_infos : this.result.entrySet()) {
                 String cowid = cow_infos.getKey();
@@ -281,11 +281,12 @@ public class range_pixel {
                     long pixel_id = pixel_infos.getKey();
                     int size = pixel_infos.getValue().size();
                     long diff = getDifferDate(pixel_infos.getValue());
+                    String date_list = getDateList(pixel_infos.getValue());
 //                    out.println(cowid + "," + pixel_id + "," + size + "," + diff);
 
                     String pixelVegClass = this.pixel_extra_info.get(pixel_id);
-                    out.println(cowid + "," + pixel_id + "," + size + "," + diff + "," + pixelVegClass
-                            + "," + this.pixelList.get(pixel_id).getKey() + "," + this.pixelList.get(pixel_id).getValue());
+                    out.println(cowid + "," + pixel_id + "," + size + "," + diff + "," + date_list + "," + pixelVegClass
+                            + this.pixelList.get(pixel_id).getKey() + "," + this.pixelList.get(pixel_id).getValue());
                 }
             }
 
@@ -323,6 +324,17 @@ public class range_pixel {
 
     }
 
+    private String getDateList(HashSet<String> datesList) {
+        TreeSet<String> sortedList = new TreeSet<>(new SortByDate());
+        sortedList.addAll(datesList);
+
+        String sr = "";
+        Iterator<String> i = sortedList.iterator();
+        while (i.hasNext())
+            sr += i.next() + ";";
+        return sr.substring(0, sr.lastIndexOf(";"));
+    }
+
     private void printVisitDateWithCowIDandPid(String cowid, String pid) {
         long Lpid = Long.parseLong(pid);
         HashSet<String> dataList = this.result.get(cowid).get(Lpid);
@@ -347,10 +359,8 @@ public class range_pixel {
     }
 
     private void loadPixelData() {
-        StringBuffer sb = new StringBuffer();
         BufferedReader br = null;
         int linenumber = 0;
-        PData pd = new PData();
 
         try {
             br = new BufferedReader(new FileReader(this.pixelPath));
@@ -363,7 +373,7 @@ public class range_pixel {
                     String[] infos = line.split(",");
                     if (infos.length > 3) {
                         int i = 3;
-                        for (; i < infos.length ; i++) {
+                        for (; i < infos.length; i++) {
                             this.extra_title += (infos[i] + ",");
                         }
                     }
@@ -468,14 +478,6 @@ public class range_pixel {
                     //if the speed need further processing
                     if (speed >= this.min_speed && speed <= this.max_speed) {
                         pixelId = getPixelID(northing, easting); //get the pixel that could include the current gps record
-//                        System.out.println(linenumber+" "+pixelId);
-//                        if (cowId.equals("1") && pixelId == 2) {
-//                            System.out.println(Math.pow(pd.easting - easting, 2));
-//                            System.out.println(Math.pow(pd.northing - northing, 2));
-//                            System.out.println(pd.easting + " " + easting + " " + " " + pd.northing + " " + northing + " " + speed);
-//                            System.out.println(linenumber + " " + date);
-//                            System.out.println("=============");
-//                        }
 
                         if (pixelId == -1) //if I can not find such a pixel
                         {
