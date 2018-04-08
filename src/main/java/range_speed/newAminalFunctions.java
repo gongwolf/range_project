@@ -558,11 +558,11 @@ public class newAminalFunctions {
                 double g_total_p = (p_array[1][0] + p_array[1][1] + p_array[1][2]) * 1.0 / total_t; //graze_total_percentage
                 double t_total_p = (p_array[2][0] + p_array[2][1] + p_array[2][2]) * 1.0 / total_t; //travel_total_percentage
 
-                bw.write(cowid+","+e.getKey() + ",");
+                bw.write(cowid + "," + e.getKey() + ",");
                 bw.write(r_pre_p + "," + g_pre_p + "," + t_pre_p + ",");
                 bw.write(r_day_p + "," + g_day_p + "," + t_day_p + ",");
                 bw.write(r_post_p + "," + g_post_p + "," + t_post_p + ",");
-                bw.write(r_total_p + "," + g_total_p + "," + t_total_p+"\n");
+                bw.write(r_total_p + "," + g_total_p + "," + t_total_p + "\n");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -576,5 +576,64 @@ public class newAminalFunctions {
                 ex.printStackTrace();
             }
         }
+    }
+
+    public void time_slot() {
+        TreeMap<String, HashSet<Pair<String, double[]>>> s_by_cowId = new TreeMap<>(new SortByCowid());
+        s_by_cowId.putAll(this.points_time_Map);
+
+        for (String e : s_by_cowId.keySet()) {
+            System.out.println(e);
+            timeSeriesForCow("84");
+            break;
+        }
+    }
+
+
+    public void timeSeriesForCow(String cow_id) {
+        HashSet<Pair<String, double[]>> time_position_set = this.points_time_Map.get(cow_id);
+
+        List<String> sorted_date_List = new ArrayList(this.dateList);
+        Collections.sort(sorted_date_List, new comparatorDate());
+
+        TreeSet<Pair<String, double[]>> ordered_time_list = new TreeSet<>(new SortByTime());
+        ordered_time_list.addAll(time_position_set);
+        ArrayList<Pair<String, double[]>> t_list = new ArrayList<>(ordered_time_list);
+
+        String temp_cdate = t_list.get(0).getKey().split(" ")[0];
+
+        for (int i = 1; i < t_list.size(); i++) {
+
+            String c_date = t_list.get(i).getKey().split(" ")[0];
+            String c_time = t_list.get(i).getKey().split(" ")[1] + " " + t_list.get(i).getKey().split(" ")[2];
+
+            if (!c_date.equals("2/28/2004")) {
+                continue;
+            }
+
+            double c_north = t_list.get(i).getValue()[0];
+            double c_east = t_list.get(i).getValue()[1];
+
+            double p_north = t_list.get(i - 1).getValue()[0];
+            double p_east = t_list.get(i - 1).getValue()[1];
+
+            try {
+                Date c_d = this.DateTimeFormatter.parse(t_list.get(i).getKey());
+                Date p_d = this.DateTimeFormatter.parse(t_list.get(i - 1).getKey());
+
+                long differ_mins = (c_d.getTime() - p_d.getTime()) / 1000 / 60;
+
+                double c_speed = Math.sqrt(Math.pow(c_north - p_north, 2) + Math.pow(c_east - p_east, 2)) / differ_mins;
+
+//                System.out.println(c_date+" "+c_time+" "+c_speed+" ["+c_north+" "+c_east+"] ["+p_north+" "+p_east+"]");
+
+                System.out.print(c_speed+",");
+
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 }
