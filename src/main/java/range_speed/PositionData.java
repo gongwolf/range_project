@@ -26,10 +26,11 @@ class PositionData
     long DTDifferernce;
 
 
-    double x1=0.0;//Positions
-    double y1=0.0;
-    double x2=0.0;
-    double y2=0.0;
+    //Positions
+    double x1=0.0;//previous northing
+    double y1=0.0;//previous easting
+    double x2=0.0;//current northing
+    double y2=0.0;//current easting
 
     double Woodland=0.0;//wood
     double DayCount=0.0;
