@@ -133,6 +133,7 @@ class PositionData
         sb.append("sn1:").append(sn1).append("\n");
         sb.append("p1:").append(p1).append("\n");
         sb.append("p2:").append(p2).append("\n");
+        sb.append("n1:").append(n1).append("\n");
         sb.append("n2:").append(n2).append("\n");
         sb.append("dist:").append(dist).append("\n");
         sb.append("day_dist:").append(day_dist).append("\n");
@@ -154,7 +155,7 @@ class PositionData
         sb.append("Pre_time:").append(Pre_time).append("\n");
         sb.append("Day_time:").append(Day_time).append("\n");
         sb.append("Post_time:").append(Post_time).append("\n");
-        sb.append("==========================================").append("\n");
+//        sb.append("==========================================").append("\n");
         return sb.toString();
     }
 }

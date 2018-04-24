@@ -9,21 +9,21 @@ import java.util.StringTokenizer;
 
 
 public class AnimalProject {
-    private final static String outputDistSino = "data/speed/DistanceandSiniosity.csv";
-    private final static String outputAll = "data/speed/CompleteProcessedData.csv";
-    private static String fileDataPosition = "data/speed/DataWithPosition.csv";
-    private static String fileWeather = "data/speed/Weather.csv";
-    private static String fileTime = "data/speed/Time.csv";
+//    private final static String outputDistSino = "data/speed/DistanceandSiniosity.csv";
+//    private final static String outputAll = "data/speed/CompleteProcessedData.csv";
+//    private static String fileDataPosition = "data/speed/DataWithPosition.csv";
+//    private static String fileWeather = "data/speed/Weather.csv";
+//    private static String fileTime = "data/speed/Time.csv";
 
-    private static int rest_speed=5;
-    private static int grazing_speed=15;
+    private static int rest_speed = 5;
+    private static int grazing_speed = 15;
 
 
-//    private final static String outputDistSino = "DistanceandSiniosity.csv";
-//    private final static String outputAll = "CompleteProcessedData.csv";
-//    private static String fileDataPosition = "DataWithPosition.csv";
-//    private static String fileWeather = "Weather.csv";
-//    private static String fileTime = "Time.csv";
+    private final static String outputDistSino = "DistanceandSiniosity.csv";
+    private final static String outputAll = "CompleteProcessedData.csv";
+    private static String fileDataPosition = "DataWithPosition.csv";
+    private static String fileWeather = "Weather.csv";
+    private static String fileTime = "Time.csv";
 
     private static void fileNameProcess() throws IOException {
 
@@ -51,13 +51,13 @@ public class AnimalProject {
         System.out.println("Enter upper bound of the speed (m/mins) of the rest movement (Default 5 m/mins) ");
         str = in.readLine();
         if (str.trim().length() > 0) {
-            rest_speed=Integer.valueOf(str);
+            rest_speed = Integer.valueOf(str);
         }
 
         System.out.println("Enter upper bound of the speed (m/mins) of the grazing movement (Default 15 m/mins) ");
         str = in.readLine();
         if (str.trim().length() > 0) {
-            grazing_speed=Integer.valueOf(str);
+            grazing_speed = Integer.valueOf(str);
         }
 
         File AllPath = new File(outputAll);
@@ -439,22 +439,23 @@ public class AnimalProject {
             PositionData.DateDifference = 0;
         }
         if (PositionData.day != 99 && PositionData.day_dist != 0) {
-            PositionData.pd2 = PositionData.x2;
-            PositionData.pn2 = PositionData.y2;
-            PositionData.day = 99;
+            PositionData.pd2 = PositionData.x1;
+            PositionData.pn2 = PositionData.y1;
             PositionData.dd1 = PositionData.x2;
             PositionData.dn1 = PositionData.y2;
+            PositionData.day = 99;
         }
 
         //PositionData.post != 99 && PositionData.post_dist != 0, means the current position is the first gps records in the post time.
         //dd2 and dn2 is the last record of the day-time
         //sd1 and sn2 is the first record of the post-time
         if (PositionData.post != 99 && PositionData.post_dist != 0) {
-            PositionData.dd2 = PositionData.x2;
-            PositionData.dn2 = PositionData.y2;
-            PositionData.post = 99;
+            PositionData.dd2 = PositionData.x1;
+            PositionData.dn2 = PositionData.y1;
             PositionData.sd1 = PositionData.x2;
             PositionData.sn1 = PositionData.y2;
+            PositionData.post = 99;
+
         }
     }
 
@@ -490,13 +491,13 @@ public class AnimalProject {
         formatter1 = new SimpleDateFormat("hh:mm:ss a");
         DTFormatter = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
         //1. get the input file names
-//        fileNameProcess();
+        fileNameProcess();
         System.out.println("================================");
-        newAminalFunctions naf = new newAminalFunctions(fileDataPosition,fileTime,rest_speed,grazing_speed);
+        newAminalFunctions naf = new newAminalFunctions(fileDataPosition, fileTime, rest_speed, grazing_speed);
         System.out.println("================================");
-//        naf.convexHull();
-//        naf.movementPartition();
-        naf.time_slot();
+        naf.convexHull();
+        naf.movementPartition();
+//        naf.time_slot();
 
         try {
             FileWriter writerDistSino = new FileWriter(outputDistSino);
@@ -510,6 +511,8 @@ public class AnimalProject {
             writeHeaderAll(writerAll);
             //3. Reading Position FileDataPosition
             String positionline = "";
+            double pre_x = 0, pre_y = 0;
+
             while ((positionline = brPosition.readLine()) != null) {
                 lineNumber++;
 
@@ -524,7 +527,11 @@ public class AnimalProject {
                 //read the splited information
                 st = new StringTokenizer(positionline, ",");
                 //System.out.println(positionline);
+
+
                 while (st.hasMoreTokens()) {
+
+
                     tokenNumber++;
                     storagestring = st.nextToken();
                     if (tokenNumber == 1)//Token Number is Each Column
@@ -565,6 +572,13 @@ public class AnimalProject {
                                     PositionData.Treatment = "light";
 
                                 PositionData.DateDifference = Math.abs((PositionData.DatePrevious.getTime() - PositionData.DateCurrent.getTime()) / (1000 * 60 * 60 * 24));
+                                pre_x = PositionData.x2;
+                                pre_y = PositionData.y2;
+
+//                                if (positionline.split(",")[0].equals("953") && positionline.split(",")[1].equals("3/22/2006")) {
+//
+//                                    System.out.println("     "+pre_x+"   "+pre_y);
+//                                }
                             }
                         }
                     }
@@ -591,14 +605,16 @@ public class AnimalProject {
                     if (tokenNumber == 4) {
                         if (lineNumber == 2) {
                             PositionData.x1 = new Double(storagestring);
-                        } else
+                        } else {
                             PositionData.x2 = new Double(storagestring);
+                        }
                     }
                     if (tokenNumber == 5) {
                         if (lineNumber == 2) {
                             PositionData.y1 = new Double(storagestring);
-                        } else
+                        } else {
                             PositionData.y2 = new Double(storagestring);
+                        }
                     }
                     if (tokenNumber == 6) {
                         PositionData.Woodland = new Double(storagestring);
@@ -625,20 +641,40 @@ public class AnimalProject {
                             DistanceCalculations(PositionData);
                         }
                     }//Calculation of Distances!!
+
+
                     PositionData.x1 = PositionData.x2;
                     PositionData.y1 = PositionData.y2;
+
+//                    if (flag == 1 && PositionData.x1 == -1) {
+//                        pre_x = PositionData.x1;
+//                        pre_y = PositionData.y1;
+//                    }
                 }
 
+//                if (positionline.split(",")[0].equals("953") && positionline.split(",")[1].equals("3/21/2006")) {
+//                    System.out.println(PositionData);
+//                    System.out.println("      "+pre_x+"~~"+pre_y);
+//                }
 
                 if (flag1 == 1) {
-//                    System.out.println("Refresh !!!!!!");
-                    PositionData.p2 = PositionData.x2;
-                    PositionData.n2 = PositionData.y2;
+                    PositionData.p2 = pre_x;
+                    PositionData.n2 = pre_y;
+
+//                    PositionData.p1 = pre_x;
+//                    PositionData.n1 = pre_y;
+
                     sinosityandwoodlandcalculations(PositionData);//Calculating sinosity and woodland
                     writeDistSino(writerDistSino, PositionData);//Writing into file after Calculations
                     ReadWeather(PositionData, lineNumber, writerAll);//Reading Weather File!!
                     writerDistSino.append('\n');
                     flag1 = 0;
+
+//                    if (positionline.split(",")[0].equals("953") && positionline.split(",")[1].equals("3/22/2006")) {
+//                        System.out.println("=====================================");
+//                        System.out.println(PositionData);
+//                    }
+
                     SwappingandloopIntialization(PositionData);//swapping Current and Previous
                 }
                 tokenNumber = 0;
