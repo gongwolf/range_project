@@ -10,9 +10,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9346ffe7-af71-466d-b9a0-a7da871e6762" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/artifacts/range_project_jar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/range_project_jar.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resource/META-INF/MANIFEST.MF" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resource/META-INF/MANIFEST.MF" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/range_speed/AnimalProject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/range_speed/AnimalProject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/range_speed/newAminalFunctions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/range_speed/newAminalFunctions.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -25,11 +25,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="range_pixel.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="range_pixel.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/range_pixel/range_pixel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="720">
-              <caret line="532" column="9" lean-forward="true" selection-start-line="532" selection-start-column="9" selection-end-line="532" selection-end-column="9" />
+            <state relative-caret-position="7905">
+              <caret line="532" column="9" selection-start-line="532" selection-start-column="9" selection-end-line="532" selection-end-column="9" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -40,29 +40,30 @@
       <file leaf-file-name="myComparator.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/range_pixel/myComparator.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="648">
+            <state relative-caret-position="540">
               <caret line="42" column="63" selection-start-line="42" selection-start-column="63" selection-end-line="42" selection-end-column="63" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="newAminalFunctions.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="newAminalFunctions.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/range_speed/newAminalFunctions.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4068">
-              <caret line="232" column="61" selection-start-line="232" selection-start-column="61" selection-end-line="232" selection-end-column="61" />
+            <state relative-caret-position="465">
+              <caret line="588" column="38" selection-start-line="588" selection-start-column="34" selection-end-line="588" selection-end-column="38" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="method#readTime#0;class#newAminalFunctions#0" />
+                <element signature="method#readGPSData#0;class#newAminalFunctions#0" />
+                <element signature="method#convexHull#0;class#newAminalFunctions#0" />
+                <element signature="docComment;method#getPartitionType#0;class#newAminalFunctions#0" />
+                <element signature="method#getPartitionType#0;class#newAminalFunctions#0" />
+                <element signature="method#FindConvexHull#0;class#newAminalFunctions#0" />
+                <element signature="method#convex_area#0;class#newAminalFunctions#0" />
+                <element signature="method#movementPartition#0;class#newAminalFunctions#0" />
+                <element signature="method#movement_type#0;class#newAminalFunctions#0" />
+                <element signature="method#movementParitionForCow#0;class#newAminalFunctions#0" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="comparatorStr.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/range_speed/comparatorStr.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="360">
-              <caret line="23" column="6" selection-start-line="23" selection-start-column="6" selection-end-line="23" selection-end-column="6" />
             </state>
           </provider>
         </entry>
@@ -70,8 +71,26 @@
       <file leaf-file-name="AnimalProject.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/range_speed/AnimalProject.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="8856">
-              <caret line="497" column="19" selection-start-line="497" selection-start-column="19" selection-end-line="497" selection-end-column="19" />
+            <state relative-caret-position="7350">
+              <caret line="495" column="41" selection-start-line="495" selection-start-column="41" selection-end-line="495" selection-end-column="41" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="myComparator.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/range_speed/myComparator.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="105">
+              <caret line="14" column="6" selection-start-line="14" selection-start-column="6" selection-end-line="14" selection-end-column="6" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="comparatorStr.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/range_speed/comparatorStr.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="300">
+              <caret line="23" column="6" selection-start-line="23" selection-start-column="6" selection-end-line="23" selection-end-column="6" />
             </state>
           </provider>
         </entry>
@@ -79,7 +98,7 @@
       <file leaf-file-name="PositionData.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/range_speed/PositionData.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2430">
+            <state relative-caret-position="2025">
               <caret line="135" column="49" selection-start-line="135" selection-start-column="49" selection-end-line="135" selection-end-column="49" />
             </state>
           </provider>
@@ -102,6 +121,7 @@
       <find>3789859.379</find>
       <find>There is something wrong with your time formation, please check it</find>
       <find>3</find>
+      <find>1.9574347760011892,14.101188989117045</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -119,10 +139,10 @@
         <option value="$PROJECT_DIR$/src/main/java/range_speed/ConvexHull.java" />
         <option value="$PROJECT_DIR$/src/main/java/range_speed/myComparator.java" />
         <option value="$PROJECT_DIR$/src/main/java/range_pixel/myComparator.java" />
-        <option value="$PROJECT_DIR$/src/main/java/range_speed/newAminalFunctions.java" />
         <option value="$PROJECT_DIR$/src/main/java/range_speed/PositionData.java" />
-        <option value="$PROJECT_DIR$/src/main/java/range_speed/AnimalProject.java" />
         <option value="$PROJECT_DIR$/src/main/java/range_pixel/range_pixel.java" />
+        <option value="$PROJECT_DIR$/src/main/java/range_speed/AnimalProject.java" />
+        <option value="$PROJECT_DIR$/src/main/java/range_speed/newAminalFunctions.java" />
       </list>
     </option>
   </component>
@@ -153,7 +173,7 @@
     <property name="GenerateAntBuildDialog.enableUiFormCompile" value="true" />
     <property name="GenerateAntBuildDialog.forceTargetJdk" value="true" />
     <property name="GenerateAntBuildDialog.outputFileNameProperty" value="range_project" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/resource" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -182,7 +202,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.range_pixel">
+  <component name="RunManager" selected="Application.AnimalProject">
     <configuration default="true" type="Applet" factoryName="Applet">
       <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
     </configuration>
@@ -304,8 +324,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.range_pixel" />
         <item itemvalue="Application.AnimalProject" />
+        <item itemvalue="Application.range_pixel" />
         <item itemvalue="Application.ConvexHull" />
         <item itemvalue="Application.range_partition" />
         <item itemvalue="Application.TimeCompare" />
@@ -329,19 +349,18 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="46" y="-4" width="1875" height="1085" extended-state="6" />
-    <editor active="true" />
+    <frame x="39" y="25" width="1881" height="1055" extended-state="6" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Messages" order="8" weight="0.32592592" />
+      <window_info anchor="bottom" id="Messages" order="8" weight="0.32518598" />
       <window_info anchor="right" id="Palette&#9;" order="7" />
       <window_info id="Image Layers" order="6" />
       <window_info anchor="right" id="Capture Analysis" order="5" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.5041322" side_tool="true" weight="0.37277487" />
       <window_info anchor="right" id="Maven Projects" order="4" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49586776" weight="0.62224555" />
       <window_info anchor="bottom" id="Version Control" order="10" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49586776" weight="0.5993624" />
       <window_info anchor="bottom" id="Terminal" order="9" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="3" />
@@ -350,8 +369,8 @@
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="UI Designer" order="4" />
       <window_info anchor="right" id="Theme Preview" order="6" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info id="Favorites" order="5" side_tool="true" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
@@ -361,29 +380,29 @@
     </layout>
     <layout-to-restore>
       <window_info anchor="right" id="Palette" order="3" />
+      <window_info active="true" anchor="bottom" id="Find" order="1" visible="true" weight="0.32843652" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Capture Analysis" order="5" />
-      <window_info anchor="bottom" id="Version Control" order="10" />
-      <window_info anchor="right" id="Theme Preview" order="6" />
-      <window_info content_ui="combo" id="Project" order="0" weight="0.1879338" />
-      <window_info id="Structure" order="1" side_tool="true" visible="true" weight="0.22605364" />
-      <window_info anchor="right" id="Commander" order="0" weight="0.4" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49586776" visible="true" weight="0.5993624" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.1879338" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.22605364" />
+      <window_info anchor="right" id="Theme Preview" order="6" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49586776" visible="true" weight="0.62224555" />
+      <window_info anchor="bottom" id="Message" order="0" />
       <window_info id="Image Layers" order="6" />
       <window_info id="Designer" order="3" />
       <window_info id="UI Designer" order="4" />
-      <window_info active="true" anchor="bottom" id="Find" order="1" visible="true" weight="0.32843652" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="right" id="Palette&#9;" order="7" />
       <window_info anchor="bottom" id="Terminal" order="9" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.5041322" side_tool="true" weight="0.37277487" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Version Control" order="10" />
       <window_info id="Capture Tool" order="2" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Messages" order="8" weight="0.32592592" />
+      <window_info anchor="right" id="Commander" order="0" weight="0.4" />
+      <window_info anchor="bottom" id="Messages" order="8" weight="0.32518598" />
       <window_info anchor="right" id="Maven Projects" order="4" />
       <window_info id="Favorites" order="5" side_tool="true" />
     </layout-to-restore>
@@ -436,6 +455,16 @@
           <caret line="627" column="68" selection-start-line="627" selection-start-column="68" selection-end-line="627" selection-end-column="68" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="method#readTime#0;class#newAminalFunctions#0" />
+            <element signature="method#readGPSData#0;class#newAminalFunctions#0" />
+            <element signature="method#convexHull#0;class#newAminalFunctions#0" />
+            <element signature="docComment;method#getPartitionType#0;class#newAminalFunctions#0" />
+            <element signature="method#getPartitionType#0;class#newAminalFunctions#0" />
+            <element signature="method#FindConvexHull#0;class#newAminalFunctions#0" />
+            <element signature="method#convex_area#0;class#newAminalFunctions#0" />
+            <element signature="method#movementPartition#0;class#newAminalFunctions#0" />
+            <element signature="method#movement_type#0;class#newAminalFunctions#0" />
+            <element signature="method#movementParitionForCow#0;class#newAminalFunctions#0" />
           </folding>
         </state>
       </provider>
@@ -698,55 +727,65 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/range_pixel/myComparator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="648">
+        <state relative-caret-position="540">
           <caret line="42" column="63" selection-start-line="42" selection-start-column="63" selection-end-line="42" selection-end-column="63" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/range_speed/myComparator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="14" column="6" selection-start-line="14" selection-start-column="6" selection-end-line="14" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/range_speed/PositionData.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2430">
-          <caret line="135" column="49" selection-start-line="135" selection-start-column="49" selection-end-line="135" selection-end-column="49" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/range_speed/AnimalProject.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8856">
-          <caret line="497" column="19" selection-start-line="497" selection-start-column="19" selection-end-line="497" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/range_speed/newAminalFunctions.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4068">
-          <caret line="232" column="61" selection-start-line="232" selection-start-column="61" selection-end-line="232" selection-end-column="61" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/range_speed/comparatorStr.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
+        <state relative-caret-position="300">
           <caret line="23" column="6" selection-start-line="23" selection-start-column="6" selection-end-line="23" selection-end-column="6" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/range_pixel/range_pixel.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="720">
-          <caret line="532" column="9" lean-forward="true" selection-start-line="532" selection-start-column="9" selection-end-line="532" selection-end-column="9" />
+        <state relative-caret-position="7905">
+          <caret line="532" column="9" selection-start-line="532" selection-start-column="9" selection-end-line="532" selection-end-column="9" />
           <folding>
             <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/range_speed/PositionData.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2025">
+          <caret line="135" column="49" selection-start-line="135" selection-start-column="49" selection-end-line="135" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/range_speed/myComparator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="14" column="6" selection-start-line="14" selection-start-column="6" selection-end-line="14" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/range_speed/AnimalProject.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7350">
+          <caret line="495" column="41" selection-start-line="495" selection-start-column="41" selection-end-line="495" selection-end-column="41" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/range_speed/newAminalFunctions.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="465">
+          <caret line="588" column="38" selection-start-line="588" selection-start-column="34" selection-end-line="588" selection-end-column="38" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#readTime#0;class#newAminalFunctions#0" />
+            <element signature="method#readGPSData#0;class#newAminalFunctions#0" />
+            <element signature="method#convexHull#0;class#newAminalFunctions#0" />
+            <element signature="docComment;method#getPartitionType#0;class#newAminalFunctions#0" />
+            <element signature="method#getPartitionType#0;class#newAminalFunctions#0" />
+            <element signature="method#FindConvexHull#0;class#newAminalFunctions#0" />
+            <element signature="method#convex_area#0;class#newAminalFunctions#0" />
+            <element signature="method#movementPartition#0;class#newAminalFunctions#0" />
+            <element signature="method#movement_type#0;class#newAminalFunctions#0" />
+            <element signature="method#movementParitionForCow#0;class#newAminalFunctions#0" />
           </folding>
         </state>
       </provider>

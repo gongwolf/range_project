@@ -30,8 +30,10 @@ public class newAminalFunctions {
     DateFormat DateTimeFormatter = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
 
 
-    HashMap<String, Pair<String, String>> timeObj = new HashMap<>();
+    HashMap<String, Pair<String, String>> timeObj = new HashMap<>(); //data -> <Sunrise and Sunset>
     ConvexHull ch = new ConvexHull();
+    private double threshold = 4;
+    private int lag = 5;
 
 
     public newAminalFunctions(String fileDataPosition, String fileTime, int rest_speed, int grazing_speed) {
@@ -66,7 +68,7 @@ public class newAminalFunctions {
                 String date = infos[0];
                 String sunrise_time = infos[1];
                 String sunset_time = infos[2];
-                this.timeObj.put(date, new Pair<String, String>(sunrise_time, sunset_time));
+                this.timeObj.put(date, new Pair<>(sunrise_time, sunset_time));
 
             }
             br.close();
@@ -583,9 +585,8 @@ public class newAminalFunctions {
         s_by_cowId.putAll(this.points_time_Map);
 
         for (String e : s_by_cowId.keySet()) {
-            System.out.println(e);
-            timeSeriesForCow("84");
-            break;
+            if (e.equals("6095"))
+                timeSeriesForCow("6095");
         }
     }
 
@@ -593,47 +594,212 @@ public class newAminalFunctions {
     public void timeSeriesForCow(String cow_id) {
         HashSet<Pair<String, double[]>> time_position_set = this.points_time_Map.get(cow_id);
 
-        List<String> sorted_date_List = new ArrayList(this.dateList);
-        Collections.sort(sorted_date_List, new comparatorDate());
+//        List<String> sorted_date_List = new ArrayList(this.dateList);
+//        Collections.sort(sorted_date_List, new comparatorDate());
 
         TreeSet<Pair<String, double[]>> ordered_time_list = new TreeSet<>(new SortByTime());
         ordered_time_list.addAll(time_position_set);
         ArrayList<Pair<String, double[]>> t_list = new ArrayList<>(ordered_time_list);
 
-        String temp_cdate = t_list.get(0).getKey().split(" ")[0];
 
-        for (int i = 1; i < t_list.size(); i++) {
+        ArrayList<String> dateList = new ArrayList<>();
 
-            String c_date = t_list.get(i).getKey().split(" ")[0];
-            String c_time = t_list.get(i).getKey().split(" ")[1] + " " + t_list.get(i).getKey().split(" ")[2];
-
-            if (!c_date.equals("2/28/2004")) {
-                continue;
-            }
-
-            double c_north = t_list.get(i).getValue()[0];
-            double c_east = t_list.get(i).getValue()[1];
-
-            double p_north = t_list.get(i - 1).getValue()[0];
-            double p_east = t_list.get(i - 1).getValue()[1];
-
-            try {
-                Date c_d = this.DateTimeFormatter.parse(t_list.get(i).getKey());
-                Date p_d = this.DateTimeFormatter.parse(t_list.get(i - 1).getKey());
-
-                long differ_mins = (c_d.getTime() - p_d.getTime()) / 1000 / 60;
-
-                double c_speed = Math.sqrt(Math.pow(c_north - p_north, 2) + Math.pow(c_east - p_east, 2)) / differ_mins;
-
-//                System.out.println(c_date+" "+c_time+" "+c_speed+" ["+c_north+" "+c_east+"] ["+p_north+" "+p_east+"]");
-
-                System.out.print(c_speed+",");
-
-
-            } catch (ParseException e) {
-                e.printStackTrace();
+        for (Pair<String, double[]> p : time_position_set) {
+            String d = p.getKey().split(" ")[0];
+            if (!dateList.contains(d)) {
+                dateList.add(d);
             }
         }
 
+        Collections.sort(dateList, new comparatorDate());
+        System.out.println(dateList.size());
+
+//        String[] d_list = dateList.toArray(new String[dateList.size()]);
+//        Collections.sort(d_list, new comparatorDate());
+
+        for (String s : dateList) {
+            System.out.println("=====================================");
+            System.out.println(s);
+            ArrayList<Pair<String, Double>> speedList = new ArrayList<>(); //time --> speed
+            for (int i = 1; i < t_list.size(); i++) {
+
+                String c_date = t_list.get(i).getKey().split(" ")[0];
+                String c_time = t_list.get(i).getKey().split(" ")[1] + " " + t_list.get(i).getKey().split(" ")[2];
+                if (c_date.equals(s)) {
+                    double c_north = t_list.get(i).getValue()[0];
+                    double c_east = t_list.get(i).getValue()[1];
+
+                    double p_north = t_list.get(i - 1).getValue()[0];
+                    double p_east = t_list.get(i - 1).getValue()[1];
+
+                    try {
+                        Date c_d = this.DateTimeFormatter.parse(t_list.get(i).getKey());
+                        Date p_d = this.DateTimeFormatter.parse(t_list.get(i - 1).getKey());
+
+                        long differ_mins = (c_d.getTime() - p_d.getTime()) / 1000 / 60;
+
+                        double c_speed = Math.sqrt(Math.pow(c_north - p_north, 2) + Math.pow(c_east - p_east, 2)) / differ_mins;
+
+//                System.out.println(c_date+" "+c_time+" "+c_speed+" ["+c_north+" "+c_east+"] ["+p_north+" "+p_east+"]");
+
+                        System.out.print(c_speed + ",");
+                        speedList.add(new Pair<>(c_time, c_speed));
+
+
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            System.out.println();
+            double rf_signal[] = findTimeSlot(speedList, this.threshold, this.lag);
+
+            boolean started = false;
+
+            printArray(rf_signal);
+
+            String start_time = "error";
+            String end_time = "error";
+            for (int i = 0; i < rf_signal.length; i++) {
+                if (rf_signal[i] == 1.0 && !started) {
+                    start_time = speedList.get(i).getKey();
+                    started=true;
+                } else if (rf_signal[i] == 0 && started) {
+                    end_time = speedList.get(i - 1).getKey();
+                    if (start_time.equals(end_time)) {
+                        System.out.print("[" + start_time+ "]");
+                    } else
+                    {
+                        System.out.print("[" + start_time + "," + end_time + "]");
+
+                    }
+                    started = false;
+                }
+            }
+
+            if(started)
+            {
+                end_time = speedList.get(speedList.size()-1).getKey();
+                if (start_time.equals(end_time)) {
+                    System.out.print("[" + start_time+ "]");
+                } else
+                {
+                    System.out.print("[" + start_time + "," + end_time + "]");
+
+                }
+                started = false;
+
+            }
+
+            System.out.println();
+
+        }
+    }
+
+    public void printArray(double[] a) {
+        for (double d : a) {
+            System.out.print(d + ",");
+        }
+
+        System.out.println();
+
+    }
+
+    private double[] findTimeSlot(ArrayList<Pair<String, Double>> speedList, double threshold, int lag) {
+
+        int n = speedList.size();
+        double[] y = new double[n];
+        String[] title = new String[n];
+        double[] signals = new double[n];
+
+        for (int i = 0; i < n; i++) {
+            y[i] = speedList.get(i).getValue();
+            title[i] = speedList.get(i).getKey();
+        }
+
+        for (int i = 0; i < n; i++) {
+            if (y[i] >= threshold) {
+                signals[i] = 1;
+            }
+        }
+
+        double[] refinded_s_1 = signals;
+        double[] refinded_s_2 = refine_signal(refinded_s_1, lag);
+
+        while (!isEquals(refinded_s_1, refinded_s_2)) {
+            refinded_s_1 = refinded_s_2;
+            refinded_s_2 = refine_signal(refinded_s_1, lag);
+        }
+
+        printArray(refinded_s_2);
+
+        return refinded_s_2;
+
+    }
+
+    private boolean isEquals(double[] refinded_s_1, double[] refinded_s_2) {
+
+        boolean flag = true;
+
+        for (int i = 0; i < refinded_s_1.length; i++) {
+            if (refinded_s_1[i] != refinded_s_2[i]) {
+                flag = false;
+                break;
+            }
+        }
+
+        return flag;
+    }
+
+    private double[] refine_signal(double[] signals, int lag) {
+        int n = signals.length;
+        double[] refined_signals = new double[n];
+        System.arraycopy(signals, 0, refined_signals, 0, n);
+
+        for (int i = 0; i < n; i++) {
+            if (signals[i] == 1 && (noActivityInPrevious(i, signals, lag) && noActivityInFellow(i, signals, lag))) {
+                refined_signals[i] = 0;
+            } else if (signals[i] == 0 && (!noActivityInPrevious(i, signals, lag) && !noActivityInFellow(i, signals, lag))) {
+                refined_signals[i] = 1;
+            }
+        }
+
+        return refined_signals;
+    }
+
+    private boolean noActivityInPrevious(int index, double[] signals, int lag) {
+        boolean flag = true;
+        int l = 0;
+
+        if (index - lag >= 0) {
+            l = index - lag;
+        }
+
+        for (int i = l; i < index; i++) {
+            if (signals[i] == 1) {
+                flag = false;
+                break;
+            }
+        }
+
+        return flag;
+    }
+
+    private boolean noActivityInFellow(int index, double[] signals, int lag) {
+        boolean flag = true;
+        int u = signals.length;
+
+        if (index + lag < signals.length) {
+            u = index + lag + 1;
+        }
+
+        for (int i = index + 1; i < u; i++) {
+            if (signals[i] == 1) {
+                flag = false;
+                break;
+            }
+        }
+
+        return flag;
     }
 }

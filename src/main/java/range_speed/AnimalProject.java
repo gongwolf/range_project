@@ -9,21 +9,21 @@ import java.util.StringTokenizer;
 
 
 public class AnimalProject {
-//    private final static String outputDistSino = "data/speed/DistanceandSiniosity.csv";
-//    private final static String outputAll = "data/speed/CompleteProcessedData.csv";
-//    private static String fileDataPosition = "data/speed/DataWithPosition.csv";
-//    private static String fileWeather = "data/speed/Weather.csv";
-//    private static String fileTime = "data/speed/Time.csv";
+    private final static String outputDistSino = "data/speed/DistanceandSiniosity.csv";
+    private final static String outputAll = "data/speed/CompleteProcessedData.csv";
+    private static String fileDataPosition = "data/speed/DataWithPosition.csv";
+    private static String fileWeather = "data/speed/Weather.csv";
+    private static String fileTime = "data/speed/Time.csv";
 
     private static int rest_speed = 5;
     private static int grazing_speed = 15;
 
 
-    private final static String outputDistSino = "DistanceandSiniosity.csv";
-    private final static String outputAll = "CompleteProcessedData.csv";
-    private static String fileDataPosition = "DataWithPosition.csv";
-    private static String fileWeather = "Weather.csv";
-    private static String fileTime = "Time.csv";
+//    private final static String outputDistSino = "DistanceandSiniosity.csv";
+//    private final static String outputAll = "CompleteProcessedData.csv";
+//    private static String fileDataPosition = "DataWithPosition.csv";
+//    private static String fileWeather = "Weather.csv";
+//    private static String fileTime = "Time.csv";
 
     private static void fileNameProcess() throws IOException {
 
@@ -491,213 +491,213 @@ public class AnimalProject {
         formatter1 = new SimpleDateFormat("hh:mm:ss a");
         DTFormatter = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
         //1. get the input file names
-        fileNameProcess();
+//        fileNameProcess();
         System.out.println("================================");
         newAminalFunctions naf = new newAminalFunctions(fileDataPosition, fileTime, rest_speed, grazing_speed);
         System.out.println("================================");
-        naf.convexHull();
-        naf.movementPartition();
-//        naf.time_slot();
+//        naf.convexHull();
+//        naf.movementPartition();
+        naf.time_slot();
 
-        try {
-            FileWriter writerDistSino = new FileWriter(outputDistSino);
-            FileWriter writerAll = new FileWriter(outputAll);
-            BufferedReader brPosition = new BufferedReader(new FileReader(fileDataPosition));
-            //BufferedReader brTime = new BufferedReader( new FileReader(fileTime));
-            //BufferedReader brWeather = new BufferedReader( new FileReader(fileWeather));
-            PositionData PositionData = new PositionData();
-            //2. write headers for both files
-            writeHeaderDistSino(writerDistSino);
-            writeHeaderAll(writerAll);
-            //3. Reading Position FileDataPosition
-            String positionline = "";
-            double pre_x = 0, pre_y = 0;
-
-            while ((positionline = brPosition.readLine()) != null) {
-                lineNumber++;
-
-//                System.out.println(positionline);
-                //if(lineNumber==10)
-                //	break;
-                //jump the title line of fileDataPosition file.
-                if (lineNumber == 1)
-                    continue;
-                // the linenumber of the first line of data is 2.
-                tokenNumber = 0;
-                //read the splited information
-                st = new StringTokenizer(positionline, ",");
-                //System.out.println(positionline);
-
-
-                while (st.hasMoreTokens()) {
-
-
-                    tokenNumber++;
-                    storagestring = st.nextToken();
-                    if (tokenNumber == 1)//Token Number is Each Column
-                    {
-                        if (lineNumber == 2)//lineNumber=2 implies the first data row
-                        {
-                            PositionData.cowidPrevious = storagestring;
-                            PositionData.cowidCurrent = storagestring;
-                        } else//Else case is from the next rows
-                        {
-                            if (!storagestring.equals(PositionData.cowidPrevious)) {
-                                flag = 1;
-                                flag1 = 1;
-                                PositionData.cowidCurrent = storagestring;
-                            }
-                        }
-                    }
-                    if (tokenNumber == 2) {
-                        if (lineNumber == 2) {
-                            PositionData.PreviousDate = storagestring;
-                            PositionData.CurrentDate = storagestring;
-                            PositionData.DatePrevious = (java.util.Date) formatter.parse(storagestring);
-                            PositionData.DateCurrent = (java.util.Date) formatter.parse(storagestring);
-                        } else {
-                            //if this recored's date is different from previous row.
-                            //If it's a new day, flag = 1
-                            if (!storagestring.equals(PositionData.PreviousDate)) {
-                                flag = 1;
-                                flag1 = 1;
-                                PositionData.CurrentDate = storagestring;
-                                PositionData.DateCurrent = (java.util.Date) formatter.parse(storagestring);
-                                PositionData.Year = storagestring.substring((storagestring.length() - 4), storagestring.length());
-                                //System.out.println(PositionData.Year);
-
-                                if (Integer.parseInt(PositionData.Year) == 2004 || Integer.parseInt(PositionData.Year) == 2005)
-                                    PositionData.Treatment = "Heavy";//Based on Year Treatment is decided
-                                else
-                                    PositionData.Treatment = "light";
-
-                                PositionData.DateDifference = Math.abs((PositionData.DatePrevious.getTime() - PositionData.DateCurrent.getTime()) / (1000 * 60 * 60 * 24));
-                                pre_x = PositionData.x2;
-                                pre_y = PositionData.y2;
-
-//                                if (positionline.split(",")[0].equals("953") && positionline.split(",")[1].equals("3/22/2006")) {
+//        try {
+//            FileWriter writerDistSino = new FileWriter(outputDistSino);
+//            FileWriter writerAll = new FileWriter(outputAll);
+//            BufferedReader brPosition = new BufferedReader(new FileReader(fileDataPosition));
+//            //BufferedReader brTime = new BufferedReader( new FileReader(fileTime));
+//            //BufferedReader brWeather = new BufferedReader( new FileReader(fileWeather));
+//            PositionData PositionData = new PositionData();
+//            //2. write headers for both files
+//            writeHeaderDistSino(writerDistSino);
+//            writeHeaderAll(writerAll);
+//            //3. Reading Position FileDataPosition
+//            String positionline = "";
+//            double pre_x = 0, pre_y = 0;
 //
-//                                    System.out.println("     "+pre_x+"   "+pre_y);
-//                                }
-                            }
-                        }
-                    }
-
-                    if (tokenNumber == 3) {
-                        if (lineNumber == 2) {
-                            PositionData.PreviousTime = storagestring;
-                            PositionData.TimePrevious = formatter1.parse(storagestring);
-                            PositionData.PreviousDT = PositionData.CurrentDate + " " + storagestring;
-                            PositionData.CurrentDT = PositionData.CurrentDate + " " + storagestring;
-
-                            PositionData.DTCurrent = PositionData.DTPrevious = DTFormatter.parse(PositionData.CurrentDT);
-
-                        } else {
-                            PositionData.CurrentTime = storagestring;
-                            PositionData.TimeCurrent = formatter1.parse(storagestring);
-                            PositionData.CurrentDT = PositionData.CurrentDate + " " + PositionData.CurrentTime;
-
-                            PositionData.DTCurrent = DTFormatter.parse(PositionData.CurrentDT);
-                            PositionData.DTDifferernce = Math.abs(PositionData.DTCurrent.getTime() - PositionData.DTPrevious.getTime()) / (1000 * 60);
-                        }
-                    }
-
-                    if (tokenNumber == 4) {
-                        if (lineNumber == 2) {
-                            PositionData.x1 = new Double(storagestring);
-                        } else {
-                            PositionData.x2 = new Double(storagestring);
-                        }
-                    }
-                    if (tokenNumber == 5) {
-                        if (lineNumber == 2) {
-                            PositionData.y1 = new Double(storagestring);
-                        } else {
-                            PositionData.y2 = new Double(storagestring);
-                        }
-                    }
-                    if (tokenNumber == 6) {
-                        PositionData.Woodland = new Double(storagestring);
-                        if (PositionData.Woodland == 1)
-                            PositionData.TotalWoodLandCount++;
-                        PositionData.TotalNumberofWoodlandcolumn++;
-                    }
-                    if (PositionData.DateDifference == 1) {
-                        PositionData.DateDifference = 2;
-                        flag = 0;
-                    } else if (flag == 1) {
-                        flag = 0;
-                        PositionData.x1 = -1;
-                        PositionData.y1 = -1;
-                    }
-                }
-
-
-                if (lineNumber > 2) {
-                    ReadTime(PositionData, lineNumber, writerAll);//Reading Time File!!
-                    if (PositionData.x1 != -1) {
-                        if (flag != 1) {
-//                            System.out.println("Cal dist");
-                            DistanceCalculations(PositionData);
-                        }
-                    }//Calculation of Distances!!
-
-
-                    PositionData.x1 = PositionData.x2;
-                    PositionData.y1 = PositionData.y2;
-
-//                    if (flag == 1 && PositionData.x1 == -1) {
-//                        pre_x = PositionData.x1;
-//                        pre_y = PositionData.y1;
+//            while ((positionline = brPosition.readLine()) != null) {
+//                lineNumber++;
+//
+////                System.out.println(positionline);
+//                //if(lineNumber==10)
+//                //	break;
+//                //jump the title line of fileDataPosition file.
+//                if (lineNumber == 1)
+//                    continue;
+//                // the linenumber of the first line of data is 2.
+//                tokenNumber = 0;
+//                //read the splited information
+//                st = new StringTokenizer(positionline, ",");
+//                //System.out.println(positionline);
+//
+//
+//                while (st.hasMoreTokens()) {
+//
+//
+//                    tokenNumber++;
+//                    storagestring = st.nextToken();
+//                    if (tokenNumber == 1)//Token Number is Each Column
+//                    {
+//                        if (lineNumber == 2)//lineNumber=2 implies the first data row
+//                        {
+//                            PositionData.cowidPrevious = storagestring;
+//                            PositionData.cowidCurrent = storagestring;
+//                        } else//Else case is from the next rows
+//                        {
+//                            if (!storagestring.equals(PositionData.cowidPrevious)) {
+//                                flag = 1;
+//                                flag1 = 1;
+//                                PositionData.cowidCurrent = storagestring;
+//                            }
+//                        }
 //                    }
-                }
-
-//                if (positionline.split(",")[0].equals("953") && positionline.split(",")[1].equals("3/21/2006")) {
-//                    System.out.println(PositionData);
-//                    System.out.println("      "+pre_x+"~~"+pre_y);
+//                    if (tokenNumber == 2) {
+//                        if (lineNumber == 2) {
+//                            PositionData.PreviousDate = storagestring;
+//                            PositionData.CurrentDate = storagestring;
+//                            PositionData.DatePrevious = (java.util.Date) formatter.parse(storagestring);
+//                            PositionData.DateCurrent = (java.util.Date) formatter.parse(storagestring);
+//                        } else {
+//                            //if this recored's date is different from previous row.
+//                            //If it's a new day, flag = 1
+//                            if (!storagestring.equals(PositionData.PreviousDate)) {
+//                                flag = 1;
+//                                flag1 = 1;
+//                                PositionData.CurrentDate = storagestring;
+//                                PositionData.DateCurrent = (java.util.Date) formatter.parse(storagestring);
+//                                PositionData.Year = storagestring.substring((storagestring.length() - 4), storagestring.length());
+//                                //System.out.println(PositionData.Year);
+//
+//                                if (Integer.parseInt(PositionData.Year) == 2004 || Integer.parseInt(PositionData.Year) == 2005)
+//                                    PositionData.Treatment = "Heavy";//Based on Year Treatment is decided
+//                                else
+//                                    PositionData.Treatment = "light";
+//
+//                                PositionData.DateDifference = Math.abs((PositionData.DatePrevious.getTime() - PositionData.DateCurrent.getTime()) / (1000 * 60 * 60 * 24));
+//                                pre_x = PositionData.x2;
+//                                pre_y = PositionData.y2;
+//
+////                                if (positionline.split(",")[0].equals("953") && positionline.split(",")[1].equals("3/22/2006")) {
+////
+////                                    System.out.println("     "+pre_x+"   "+pre_y);
+////                                }
+//                            }
+//                        }
+//                    }
+//
+//                    if (tokenNumber == 3) {
+//                        if (lineNumber == 2) {
+//                            PositionData.PreviousTime = storagestring;
+//                            PositionData.TimePrevious = formatter1.parse(storagestring);
+//                            PositionData.PreviousDT = PositionData.CurrentDate + " " + storagestring;
+//                            PositionData.CurrentDT = PositionData.CurrentDate + " " + storagestring;
+//
+//                            PositionData.DTCurrent = PositionData.DTPrevious = DTFormatter.parse(PositionData.CurrentDT);
+//
+//                        } else {
+//                            PositionData.CurrentTime = storagestring;
+//                            PositionData.TimeCurrent = formatter1.parse(storagestring);
+//                            PositionData.CurrentDT = PositionData.CurrentDate + " " + PositionData.CurrentTime;
+//
+//                            PositionData.DTCurrent = DTFormatter.parse(PositionData.CurrentDT);
+//                            PositionData.DTDifferernce = Math.abs(PositionData.DTCurrent.getTime() - PositionData.DTPrevious.getTime()) / (1000 * 60);
+//                        }
+//                    }
+//
+//                    if (tokenNumber == 4) {
+//                        if (lineNumber == 2) {
+//                            PositionData.x1 = new Double(storagestring);
+//                        } else {
+//                            PositionData.x2 = new Double(storagestring);
+//                        }
+//                    }
+//                    if (tokenNumber == 5) {
+//                        if (lineNumber == 2) {
+//                            PositionData.y1 = new Double(storagestring);
+//                        } else {
+//                            PositionData.y2 = new Double(storagestring);
+//                        }
+//                    }
+//                    if (tokenNumber == 6) {
+//                        PositionData.Woodland = new Double(storagestring);
+//                        if (PositionData.Woodland == 1)
+//                            PositionData.TotalWoodLandCount++;
+//                        PositionData.TotalNumberofWoodlandcolumn++;
+//                    }
+//                    if (PositionData.DateDifference == 1) {
+//                        PositionData.DateDifference = 2;
+//                        flag = 0;
+//                    } else if (flag == 1) {
+//                        flag = 0;
+//                        PositionData.x1 = -1;
+//                        PositionData.y1 = -1;
+//                    }
 //                }
-
-                if (flag1 == 1) {
-                    PositionData.p2 = pre_x;
-                    PositionData.n2 = pre_y;
-
-//                    PositionData.p1 = pre_x;
-//                    PositionData.n1 = pre_y;
-
-                    sinosityandwoodlandcalculations(PositionData);//Calculating sinosity and woodland
-                    writeDistSino(writerDistSino, PositionData);//Writing into file after Calculations
-                    ReadWeather(PositionData, lineNumber, writerAll);//Reading Weather File!!
-                    writerDistSino.append('\n');
-                    flag1 = 0;
-
-//                    if (positionline.split(",")[0].equals("953") && positionline.split(",")[1].equals("3/22/2006")) {
-//                        System.out.println("=====================================");
-//                        System.out.println(PositionData);
-//                    }
-
-                    SwappingandloopIntialization(PositionData);//swapping Current and Previous
-                }
-                tokenNumber = 0;
-//                System.out.println(PositionData);
-                PositionData.PreviousDT = PositionData.CurrentDT;
-                PositionData.DTPrevious = PositionData.DTCurrent;
-            }
-
-            writeDistSino(writerDistSino, PositionData);//Writing Values
-            writerDistSino.append('\n');
-            System.out.println("Done!! See " + outputDistSino + " for whole Data with All Calculations");
-            ReadWeather(PositionData, lineNumber, writerAll);//Reading Weather File and attaching weather Factors
-            writerDistSino.flush();
-            writerDistSino.close();
-            writerAll.flush();
-            writerAll.close();
-            System.out.println("Done!! See " + outputAll + " for whole Data with Weather Factors");
-        }//Try Ending
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//
+//
+//                if (lineNumber > 2) {
+//                    ReadTime(PositionData, lineNumber, writerAll);//Reading Time File!!
+//                    if (PositionData.x1 != -1) {
+//                        if (flag != 1) {
+////                            System.out.println("Cal dist");
+//                            DistanceCalculations(PositionData);
+//                        }
+//                    }//Calculation of Distances!!
+//
+//
+//                    PositionData.x1 = PositionData.x2;
+//                    PositionData.y1 = PositionData.y2;
+//
+////                    if (flag == 1 && PositionData.x1 == -1) {
+////                        pre_x = PositionData.x1;
+////                        pre_y = PositionData.y1;
+////                    }
+//                }
+//
+////                if (positionline.split(",")[0].equals("953") && positionline.split(",")[1].equals("3/21/2006")) {
+////                    System.out.println(PositionData);
+////                    System.out.println("      "+pre_x+"~~"+pre_y);
+////                }
+//
+//                if (flag1 == 1) {
+//                    PositionData.p2 = pre_x;
+//                    PositionData.n2 = pre_y;
+//
+////                    PositionData.p1 = pre_x;
+////                    PositionData.n1 = pre_y;
+//
+//                    sinosityandwoodlandcalculations(PositionData);//Calculating sinosity and woodland
+//                    writeDistSino(writerDistSino, PositionData);//Writing into file after Calculations
+//                    ReadWeather(PositionData, lineNumber, writerAll);//Reading Weather File!!
+//                    writerDistSino.append('\n');
+//                    flag1 = 0;
+//
+////                    if (positionline.split(",")[0].equals("953") && positionline.split(",")[1].equals("3/22/2006")) {
+////                        System.out.println("=====================================");
+////                        System.out.println(PositionData);
+////                    }
+//
+//                    SwappingandloopIntialization(PositionData);//swapping Current and Previous
+//                }
+//                tokenNumber = 0;
+////                System.out.println(PositionData);
+//                PositionData.PreviousDT = PositionData.CurrentDT;
+//                PositionData.DTPrevious = PositionData.DTCurrent;
+//            }
+//
+//            writeDistSino(writerDistSino, PositionData);//Writing Values
+//            writerDistSino.append('\n');
+//            System.out.println("Done!! See " + outputDistSino + " for whole Data with All Calculations");
+//            ReadWeather(PositionData, lineNumber, writerAll);//Reading Weather File and attaching weather Factors
+//            writerDistSino.flush();
+//            writerDistSino.close();
+//            writerAll.flush();
+//            writerAll.close();
+//            System.out.println("Done!! See " + outputAll + " for whole Data with Weather Factors");
+//        }//Try Ending
+//        catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 }
 
