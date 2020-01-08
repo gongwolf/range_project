@@ -14,9 +14,9 @@ public class range_pixel {
 
 
     HashMap<Long, Pair<Double, Double>> pixelList = new HashMap<Long, Pair<Double, Double>>(); //pixel_id -> <northing,easting>
-    HashMap<String, HashMap<Long, HashSet<String>>> result = new HashMap<>(); //cowID—> Hashmap<pixel_id,data in the pixel of the cow>
-    HashMap<String, HashMap<Long, Integer>> visited_result = new HashMap<>(); //cowID—> Hashmap<pixel_id,data in the pixel of the cow>
-    HashMap<String, HashMap<Long, HashMap<Long, HashSet<String>>>> yearInfos = new HashMap<>();
+    HashMap<String, HashMap<Long, HashSet<String>>> result = new HashMap<>(); //cowID—> Hashmap<pixel_id,date list that the cow was in the pixel>
+    HashMap<String, HashMap<Long, Integer>> visited_result = new HashMap<>(); //cowID—> Hashmap<pixel_id,number of time that the cow was in the pixel>
+    HashMap<String, HashMap<Long, HashMap<Long, HashSet<String>>>> yearInfos = new HashMap<>(); //cowID—> HashMap<year --> HashMap<pixel_id,date list that the cow was in the pixel>>
     private int range_size = 30;
     private int min_speed = 5;
     private int max_speed = 100;
@@ -88,11 +88,11 @@ public class range_pixel {
                 long pixel_id = pixel_infos.getKey();
                 Calendar c = Calendar.getInstance();
                 SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
+
                 for (String dateStr : pixel_infos.getValue()) {
                     try {
                         c.setTime(ft.parse(dateStr));
                         long year = c.get(Calendar.YEAR);
-
 
                         HashMap<Long, HashMap<Long, HashSet<String>>> years = yearInfos.get(cowid);
                         if (years == null) {
@@ -298,10 +298,14 @@ public class range_pixel {
         }
     }
 
-    private long getDifferDate(HashSet<String> value) {
+    /**
+     * @param dateList the list of the dates
+     * @return the interval days of max date minus the min date in the given datas
+     */
+    private long getDifferDate(HashSet<String> dateList) {
         Date mindate = null, maxdate = null;
         SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd");
-        for (String date : value) {
+        for (String date : dateList) {
             try {
                 Date tempdate = ft.parse(date);
                 if (maxdate == null || tempdate.compareTo(maxdate) > 0) {
@@ -316,7 +320,6 @@ public class range_pixel {
             }
 
         }
-
 //        System.out.println((maxdate.getTime() - mindate.getTime()));
 //        System.out.println((maxdate.getTime() - mindate.getTime()) / (1000*60*60*24));
 //        System.out.println((double)(maxdate.getTime() - mindate.getTime()) / (1000*60*60*24));
@@ -379,6 +382,7 @@ public class range_pixel {
                     }
                     continue;
                 }
+
                 String[] infos = line.split(",");
                 Long pixelID = Long.parseLong(infos[0]);
                 Double pixelNorthing = Double.parseDouble(infos[1]);
@@ -466,14 +470,11 @@ public class range_pixel {
                   2. Different cowid
                   3. Different date
                 */
-                if (cowId.equals(pd.cowId) && date.equals(pd.date)) // if the same cow but the GPS record is in the same day
+                if (cowId.equals(pd.cowId) && date.equals(pd.date)) // if the same cow and the GPS record is in the same day
                 {
                     //calculate the speed of the cow start from the previous record
                     double distance = Math.abs(Math.sqrt(Math.pow(pd.easting - easting, 2) + Math.pow(pd.northing - northing, 2)));
-                    double speed = distance / 5;
-//                    System.out.println(Math.pow(pd.easting - easting, 2));
-//                    System.out.println(Math.pow(pd.northing - northing, 2));
-//                    System.out.println(pd.easting+" "+easting+" "+" "+pd.northing+" "+northing+" "+speed);
+                    double speed = distance / 5; //the time interval to calculate the speed
 
                     //if the speed need further processing
                     if (speed >= this.min_speed && speed <= this.max_speed) {
@@ -519,14 +520,20 @@ public class range_pixel {
 //        System.out.println(this.result.size());
     }
 
+    /**
+     * Find the pixel id of the given northing and easting coordination
+     *
+     * @param northing the value of the northing coordination
+     * @param easting  the value of the easting coordination
+     * @return the pixel id, if can not find the cell of the pixel, return -1.
+     */
     private long getPixelID(double northing, double easting) {
         long result = -1;
         for (Map.Entry<Long, Pair<Double, Double>> e : this.pixelList.entrySet()) {
             double x = e.getValue().getKey(); //northing
             double y = e.getValue().getValue(); //easting
             //easting puls, norting sub
-//            if ((northing < x && northing > x - this.range_size) && (easting > y && easting < y + this.range_size)) {
-            if ((northing < x && northing > x - this.range_size) && (easting > y && easting < y + this.range_size)) {
+            if ((northing < x && northing > x - this.range_size) && (easting > y && easting < y + this.range_size)) { // Need to check it carefully.
                 result = e.getKey();
                 break;
             }

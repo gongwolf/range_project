@@ -17,7 +17,7 @@ public class newAminalFunctions {
 //    int traveling_speed = 50;
 
     HashMap<String, HashMap<String, ArrayList<Double[]>>> pointsMap = new HashMap<>(); //cowid -> <date, List of points>
-    HashMap<String, HashSet<Pair<String, double[]>>> points_time_Map = new HashMap<>(); //cowid -> <date, List of points>
+    HashMap<String, HashSet<Pair<String, double[]>>> points_time_Map = new HashMap<>(); //cowid -> <date(day+time), List of points>
 
     HashMap<String, HashMap<String, HashSet<Pair<Double, Double>>>> pre_pointsMap = new HashMap<>(); //cowid -> <date, List of points>
     HashMap<String, HashMap<String, HashSet<Pair<Double, Double>>>> day_pointsMap = new HashMap<>(); //cowid -> <date, List of points>
@@ -36,11 +36,13 @@ public class newAminalFunctions {
     private int lag = 5;
 
 
-    public newAminalFunctions(String fileDataPosition, String fileTime, int rest_speed, int grazing_speed) {
+    public newAminalFunctions(String fileDataPosition, String fileTime, int rest_speed, int grazing_speed, int threshold, int lag) {
         this.dataFile = fileDataPosition;
         this.TimeFile = fileTime;
         this.rest_speed = rest_speed;
         this.grazing_speed = grazing_speed;
+        this.threshold = threshold;
+        this.lag = lag;
 
 //        System.out.println(this.dataFile);
 //        System.out.println(this.TimeFile);
@@ -448,8 +450,8 @@ public class newAminalFunctions {
         TreeMap<String, HashSet<Pair<String, double[]>>> s_by_cowId = new TreeMap<>(new SortByCowid());
         s_by_cowId.putAll(this.points_time_Map);
 
-        for (String e : s_by_cowId.keySet()) {
-            movementParitionForCow(e);
+        for (String cow_id : s_by_cowId.keySet()) {
+            movementParitionForCow(cow_id);
         }
 
         System.out.println("Done!! See movement_partition.csv for the movement for each cow for each day");
@@ -475,7 +477,7 @@ public class newAminalFunctions {
         FileWriter fw = null;
 
 
-        HashSet<Pair<String, double[]>> dtp_list_of_cow = this.points_time_Map.get(cowid);
+        HashSet<Pair<String, double[]>> dtp_list_of_cow = this.points_time_Map.get(cowid); //date --->> list of points
 
         List<String> sorted_date_List = new ArrayList(this.dateList);
         Collections.sort(sorted_date_List, new comparatorDate());
@@ -581,118 +583,169 @@ public class newAminalFunctions {
     }
 
     public void time_slot() {
+
+        //delete before write the file
+        File file = new File("time_slots.csv");
+        if (file.exists()) {
+            file.delete();
+        }
+
+        //write the title
+        FileWriter fw = null;
+        BufferedWriter bw = null;
+        try {
+            fw = new FileWriter(file.getAbsoluteFile(), true);
+            bw = new BufferedWriter(fw);
+            bw.write("CowID,date,activity_time_slots_list\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (bw != null)
+                    bw.close();
+                if (fw != null)
+                    fw.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+
         TreeMap<String, HashSet<Pair<String, double[]>>> s_by_cowId = new TreeMap<>(new SortByCowid());
         s_by_cowId.putAll(this.points_time_Map);
 
         for (String e : s_by_cowId.keySet()) {
-            if (e.equals("6095"))
-                timeSeriesForCow("6095");
+            timeSeriesForCow(e);
         }
+
+        System.out.println("Done!! See time_slots.csv for finding the activities of each cow for each day.");
+
     }
 
 
     public void timeSeriesForCow(String cow_id) {
-        HashSet<Pair<String, double[]>> time_position_set = this.points_time_Map.get(cow_id);
+
+        BufferedWriter bw = null;
+        FileWriter fw = null;
+
+        try {
+            File file = new File("time_slots.csv");
+            fw = new FileWriter(file.getAbsoluteFile(), true);
+            bw = new BufferedWriter(fw);
+
+            HashSet<Pair<String, double[]>> time_position_set = this.points_time_Map.get(cow_id);
 
 //        List<String> sorted_date_List = new ArrayList(this.dateList);
 //        Collections.sort(sorted_date_List, new comparatorDate());
 
-        TreeSet<Pair<String, double[]>> ordered_time_list = new TreeSet<>(new SortByTime());
-        ordered_time_list.addAll(time_position_set);
-        ArrayList<Pair<String, double[]>> t_list = new ArrayList<>(ordered_time_list);
+            TreeSet<Pair<String, double[]>> ordered_time_list = new TreeSet<>(new SortByTime());
+            ordered_time_list.addAll(time_position_set);
+            ArrayList<Pair<String, double[]>> t_list = new ArrayList<>(ordered_time_list);
 
 
-        ArrayList<String> dateList = new ArrayList<>();
+            ArrayList<String> dateList = new ArrayList<>();
 
-        for (Pair<String, double[]> p : time_position_set) {
-            String d = p.getKey().split(" ")[0];
-            if (!dateList.contains(d)) {
-                dateList.add(d);
+            for (Pair<String, double[]> p : time_position_set) {
+                String d = p.getKey().split(" ")[0];
+                if (!dateList.contains(d)) {
+                    dateList.add(d);
+                }
             }
-        }
 
-        Collections.sort(dateList, new comparatorDate());
-        System.out.println(dateList.size());
+            Collections.sort(dateList, new comparatorDate());
+//            System.out.println(dateList.size());
 
 //        String[] d_list = dateList.toArray(new String[dateList.size()]);
 //        Collections.sort(d_list, new comparatorDate());
 
-        for (String s : dateList) {
-            System.out.println("=====================================");
-            System.out.println(s);
-            ArrayList<Pair<String, Double>> speedList = new ArrayList<>(); //time --> speed
-            for (int i = 1; i < t_list.size(); i++) {
+            for (String s : dateList) {
+//                System.out.println("=====================================");
+//                System.out.println(s);
+                ArrayList<Pair<String, Double>> speedList = new ArrayList<>(); //time --> speed
+                for (int i = 1; i < t_list.size(); i++) {
 
-                String c_date = t_list.get(i).getKey().split(" ")[0];
-                String c_time = t_list.get(i).getKey().split(" ")[1] + " " + t_list.get(i).getKey().split(" ")[2];
-                if (c_date.equals(s)) {
-                    double c_north = t_list.get(i).getValue()[0];
-                    double c_east = t_list.get(i).getValue()[1];
+                    String c_date = t_list.get(i).getKey().split(" ")[0];
+                    String c_time = t_list.get(i).getKey().split(" ")[1] + " " + t_list.get(i).getKey().split(" ")[2];
+                    if (c_date.equals(s)) {
+                        double c_north = t_list.get(i).getValue()[0];
+                        double c_east = t_list.get(i).getValue()[1];
 
-                    double p_north = t_list.get(i - 1).getValue()[0];
-                    double p_east = t_list.get(i - 1).getValue()[1];
+                        double p_north = t_list.get(i - 1).getValue()[0];
+                        double p_east = t_list.get(i - 1).getValue()[1];
 
-                    try {
-                        Date c_d = this.DateTimeFormatter.parse(t_list.get(i).getKey());
-                        Date p_d = this.DateTimeFormatter.parse(t_list.get(i - 1).getKey());
+                        try {
+                            Date c_d = this.DateTimeFormatter.parse(t_list.get(i).getKey());
+                            Date p_d = this.DateTimeFormatter.parse(t_list.get(i - 1).getKey());
 
-                        long differ_mins = (c_d.getTime() - p_d.getTime()) / 1000 / 60;
+                            long differ_mins = (c_d.getTime() - p_d.getTime()) / 1000 / 60;
 
-                        double c_speed = Math.sqrt(Math.pow(c_north - p_north, 2) + Math.pow(c_east - p_east, 2)) / differ_mins;
+                            double c_speed = Math.sqrt(Math.pow(c_north - p_north, 2) + Math.pow(c_east - p_east, 2)) / differ_mins;
 
 //                System.out.println(c_date+" "+c_time+" "+c_speed+" ["+c_north+" "+c_east+"] ["+p_north+" "+p_east+"]");
 
-                        System.out.print(c_speed + ",");
-                        speedList.add(new Pair<>(c_time, c_speed));
+//                            System.out.print(c_speed + ",");
+                            speedList.add(new Pair<>(c_time, c_speed));
 
 
-                    } catch (ParseException e) {
-                        e.printStackTrace();
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
-            }
-            System.out.println();
-            double rf_signal[] = findTimeSlot(speedList, this.threshold, this.lag);
+//                System.out.println();
+                double rf_signal[] = findTimeSlot(speedList, this.threshold, this.lag);
 
-            boolean started = false;
+                boolean started = false;
 
-            printArray(rf_signal);
+//                printArray(rf_signal);
+                bw.write(cow_id + "," + s + ",");
 
-            String start_time = "error";
-            String end_time = "error";
-            for (int i = 0; i < rf_signal.length; i++) {
-                if (rf_signal[i] == 1.0 && !started) {
-                    start_time = speedList.get(i).getKey();
-                    started=true;
-                } else if (rf_signal[i] == 0 && started) {
-                    end_time = speedList.get(i - 1).getKey();
+                String start_time = "error";
+                String end_time = "error";
+                for (int i = 0; i < rf_signal.length; i++) {
+                    if (rf_signal[i] == 1.0 && !started) {
+                        start_time = speedList.get(i).getKey();
+                        started = true;
+                    } else if (rf_signal[i] == 0 && started) {
+                        end_time = speedList.get(i - 1).getKey();
+                        if (start_time.equals(end_time)) {
+                            bw.write("[" + start_time + "]");
+                        } else {
+                            bw.write("[" + start_time + "~" + end_time + "]");
+
+                        }
+                        started = false;
+                    }
+                }
+
+                if (started) {
+                    end_time = speedList.get(speedList.size() - 1).getKey();
                     if (start_time.equals(end_time)) {
-                        System.out.print("[" + start_time+ "]");
-                    } else
-                    {
-                        System.out.print("[" + start_time + "," + end_time + "]");
+                        bw.write("[" + start_time + "]");
+                    } else {
+                        bw.write("[" + start_time + "~" + end_time + "]");
 
                     }
                     started = false;
-                }
-            }
-
-            if(started)
-            {
-                end_time = speedList.get(speedList.size()-1).getKey();
-                if (start_time.equals(end_time)) {
-                    System.out.print("[" + start_time+ "]");
-                } else
-                {
-                    System.out.print("[" + start_time + "," + end_time + "]");
 
                 }
-                started = false;
+
+                bw.write("\n");
 
             }
 
-            System.out.println();
 
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (bw != null)
+                    bw.close();
+                if (fw != null)
+                    fw.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
@@ -731,7 +784,7 @@ public class newAminalFunctions {
             refinded_s_2 = refine_signal(refinded_s_1, lag);
         }
 
-        printArray(refinded_s_2);
+//        printArray(refinded_s_2);
 
         return refinded_s_2;
 

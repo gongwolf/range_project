@@ -12,6 +12,13 @@ public class TimeCompare {
     }
 
 
+    /**
+     *
+     * @param cur_date current date and time
+     * @param Sunrise the date and time of the sunrise
+     * @param Sunset the date and time of the sunset
+     * @return if cur date is before sunrise, return 0. if cur date is after sunset, return 2. otherwise, return 1.
+     */
     public int getPartitionType(String cur_date, String Sunrise, String Sunset) {
         SimpleDateFormat parser = new SimpleDateFormat("HH:mm:ss");
         Date Sunrise_D = null;
