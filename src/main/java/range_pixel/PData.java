@@ -2,7 +2,7 @@ package range_pixel;
 
 public class PData {
 
-    public String gpsId, cowId, date;
+    public String gpsId, cowId, date, time;
     public double northing, easting;
 
     public boolean isNull() {
@@ -20,7 +20,7 @@ public class PData {
     }
 
     public void initlizePData() {
-        this.gpsId = this.cowId = this.date = "";
+        this.gpsId = this.cowId = this.date = this.time = "";
         this.northing = this.easting = 0.0;
     }
 
@@ -32,7 +32,8 @@ public class PData {
         gpsId = infos[0];
         cowId = infos[1];
         date = infos[2];
-        northing = Double.parseDouble(infos[3]);
-        easting = Double.parseDouble(infos[4]);
+        time = infos[3];
+        northing = Double.parseDouble(infos[4]);
+        easting = Double.parseDouble(infos[5]);
     }
 }
