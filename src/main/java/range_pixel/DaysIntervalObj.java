@@ -12,10 +12,8 @@ public class DaysIntervalObj {
 
     @Override
     public String toString() {
-        return "DaysIntervalObj{" +
-                "id=" + id +
-                ", start_date=" + date_formatter.format(start_date) +
-                ", end_date=" + date_formatter.format(end_date) +
-                '}';
+        return "Days Interval " + id +
+                " : start_date=" + date_formatter.format(start_date) +
+                ", end_date=" + date_formatter.format(end_date);
     }
 }

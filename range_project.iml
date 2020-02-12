@@ -11,5 +11,10 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: me.tongfei:progressbar:0.8.1" level="project" />
+    <orderEntry type="library" name="Maven: org.jline:jline:3.13.3" level="project" />
+    <orderEntry type="library" name="Maven: org.jline:jline-terminal-jansi:3.13.3" level="project" />
+    <orderEntry type="library" name="Maven: org.fusesource.jansi:jansi:1.18" level="project" />
+    <orderEntry type="library" name="Maven: org.jline:jline-terminal:3.13.3" level="project" />
   </component>
 </module>

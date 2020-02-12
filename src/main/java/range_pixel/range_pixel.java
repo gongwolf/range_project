@@ -1,9 +1,10 @@
 package range_pixel;
 
 import javafx.util.Pair;
+import me.tongfei.progressbar.ProgressBar;
+import me.tongfei.progressbar.ProgressBarStyle;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -16,7 +17,7 @@ public class range_pixel {
 
     HashMap<Long, Pair<Double, Double>> pixelList = new HashMap<Long, Pair<Double, Double>>(); //pixel_id -> <northing,easting>
     HashMap<String, HashMap<Long, HashSet<String>>> result = new HashMap<>(); //cowID—> Hashmap<pixel_id,date list that the cow was in the pixel>
-    HashMap<String, HashMap<Long, Integer>> visited_result = new HashMap<>(); //cowID—> Hashmap<pixel_id,number of time that the cow was in the pixel>
+    HashMap<String, HashMap<Long, Pair<Integer, Double>>> visited_result = new HashMap<>(); //cowID—> Hashmap<pixel_id, <number of times and time in mins that the cow was in the pixel>
     HashMap<String, HashMap<Long, HashMap<Long, HashSet<String>>>> yearInfos = new HashMap<>(); //cowID—> HashMap<year --> HashMap<pixel_id,date list that the cow was in the pixel>>
 
     ArrayList<DaysIntervalObj> days_interval_mapping_list = new ArrayList<>();
@@ -26,7 +27,7 @@ public class range_pixel {
     private int range_size = 30;
     private double min_speed = 5;
     private double max_speed = 100;
-    private int day_interval = 2;
+    private int day_interval = 1;
     private int sub_table_interval = 30;
 
     private HashMap<Long, String> pixel_extra_info = new HashMap<>();//pix
@@ -41,10 +42,11 @@ public class range_pixel {
         rp.loadPixelData();
         rp.loadGPSDateInformation();
 //        System.out.println(rp.pixelList.size());
-        rp.readGPSData();
+        rp.loadGPSData();
 //        System.out.println(rp.result.size());
 //        rp.printVisitDateWithCowIDandPid("953","113");
 
+        System.out.println("=======================================================================================");
         rp.printResult1();
         rp.setYearinfos();
         rp.printResult2();
@@ -78,13 +80,13 @@ public class range_pixel {
                 this.range_size = Integer.parseInt(str);
             }
 
-            System.out.println("Enter min speed (Default: 5) : ");
+            System.out.println("Enter min speed (Default: 5.0) : ");
             str = in.readLine();
             if (str.trim().length() > 0) {
                 this.min_speed = Double.parseDouble(str);
             }
 
-            System.out.println("Enter max speed (Default: 100) : ");
+            System.out.println("Enter max speed (Default: 100.0) : ");
             str = in.readLine();
             if (str.trim().length() > 0) {
                 this.max_speed = Double.parseDouble(str);
@@ -192,9 +194,11 @@ public class range_pixel {
                     }
 
                     if (size != 0) {
+
                         if (!distinc_visit_number.contains(size)) {
                             distinc_visit_number.add(size);
                         }
+
                         if (pixel_visit_summary.containsKey(cow_id)) {
                             HashMap<Integer, Integer> visit_info = pixel_visit_summary.get(cow_id);
                             if (visit_info.containsKey(size)) {
@@ -214,11 +218,17 @@ public class range_pixel {
 
 
                 int size = 0;
+
                 if (date_list_in_pixel_all != null) {
                     size = getSizeInDaysInterval(date_list_in_pixel_all);
                 }
 
                 if (size != 0) {
+
+                    if (!distinc_visit_number.contains(size)) {
+                        distinc_visit_number.add(size);
+                    }
+
                     String cow_id_all = "all";
                     if (pixel_visit_summary.containsKey(cow_id_all)) {
                         HashMap<Integer, Integer> visit_info = pixel_visit_summary.get(cow_id_all);
@@ -353,7 +363,7 @@ public class range_pixel {
                     out.println(master_str_row.substring(0, master_str_row.lastIndexOf(",")));
                 }
                 out.close();
-                System.out.println("Done!! See result5 sub-tables,  pixel-cowid visits mappings. ( " + file.getName() + " )");
+                System.out.println("   |--- Done!! See result5 sub-tables,  pixel-cowid visits mappings. ( " + file.getName() + " )");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -373,12 +383,12 @@ public class range_pixel {
              BufferedWriter bw = new BufferedWriter(fw);
              PrintWriter out = new PrintWriter(bw)) {
             out.println("Cow_id,Pixel ID,Number of visited times,time spent," + this.extra_title + "Northing,Easting");
-            for (Map.Entry<String, HashMap<Long, Integer>> cow_infos : this.visited_result.entrySet()) {
+            for (Map.Entry<String, HashMap<Long, Pair<Integer, Double>>> cow_infos : this.visited_result.entrySet()) {
                 String cowid = cow_infos.getKey();
-                for (Map.Entry<Long, Integer> pixel_infos : cow_infos.getValue().entrySet()) {
+                for (Map.Entry<Long, Pair<Integer, Double>> pixel_infos : cow_infos.getValue().entrySet()) {
                     long pixel_id = pixel_infos.getKey();
-                    int times = pixel_infos.getValue();
-                    long spent = times * 5;
+                    int times = pixel_infos.getValue().getKey();
+                    String spent = String.format("%.4f", pixel_infos.getValue().getValue());
                     String pixelVegClass = this.pixel_extra_info.get(pixel_id);
                     out.println(cowid + "," + pixel_id + "," + times + "," + spent + "," + pixelVegClass
                             + this.pixelList.get(pixel_id).getKey() + "," + this.pixelList.get(pixel_id).getValue());
@@ -550,6 +560,7 @@ public class range_pixel {
                     Date d = date_formatter.parse(str_date);
                     if (d.compareTo(d_interval_obj.start_date) >= 0 && d.compareTo(d_interval_obj.end_date) <= 0) {
                         visited_interval_list.add(d_interval_obj);
+                        continue;
                     }
                 }
             }
@@ -569,6 +580,7 @@ public class range_pixel {
                     Date d = date_formatter.parse(str_date);
                     if (d.compareTo(d_interval_obj.start_date) >= 0 && d.compareTo(d_interval_obj.end_date) <= 0) {
                         visited_interval_list.add(d_interval_obj);
+                        continue;
                     }
                 }
             }
@@ -620,6 +632,28 @@ public class range_pixel {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date d1 = formatter.parse(date + " " + pre_time);
             Date d2 = formatter.parse(date + " " + current_time);
+
+            long differ_in_sec = (d2.getTime() - d1.getTime()) / 1000;
+            differ = differ_in_sec / 60.0;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return differ;
+    }
+
+    /**
+     * @param pre_date     previous date in yyyy-MM-dd format
+     * @param pre_time     previous time in HH:mm:ss format
+     * @param current_date current date in yyyy-MM-dd format
+     * @param current_time current time in HH:mm:ss format
+     * @return the difference in min
+     */
+    private double getDifferTime(String pre_date, String pre_time, String current_date, String current_time) {
+        double differ = 0.0;
+        try {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date d1 = formatter.parse(pre_date + " " + pre_time);
+            Date d2 = formatter.parse(current_date + " " + current_time);
 
             long differ_in_sec = (d2.getTime() - d1.getTime()) / 1000;
             differ = differ_in_sec / 60.0;
@@ -738,9 +772,6 @@ public class range_pixel {
 
                 String str_date = line.split(",")[2];
                 Date d = date_formatter.parse(str_date);
-//                System.out.println(line);
-//                System.out.println("date in the GPS records is " + date_formatter.format(d.getTime()) + "  " + d.compareTo(min_d) + "  " + d.compareTo(max_d));
-
                 if (d.before(min_d)) {
                     min_d = d;
                 }
@@ -750,6 +781,7 @@ public class range_pixel {
                 }
             }
 
+            System.out.println("=======================================================================================");
             System.out.println("Min date in the GPS records is " + date_formatter.format(min_d.getTime()));
             System.out.println("Max date in the GPS records is " + date_formatter.format(max_d.getTime()));
 
@@ -777,7 +809,7 @@ public class range_pixel {
 
 
         while (current_d.compareTo(max_d) != 0) {
-            System.out.println(date_formatter.format(current_d) + "   " + interval + "  " + interval_id);
+//            System.out.println(date_formatter.format(current_d) + "   " + interval + "  " + interval_id);
             intervalObj.end_date = current_d;
 
             interval++;
@@ -800,8 +832,10 @@ public class range_pixel {
             }
         }
 
-        System.out.println(date_formatter.format(current_d) + "   " + interval + "  " + interval_id);
+//        System.out.println(date_formatter.format(current_d) + "   " + interval + "  " + interval_id);
         intervalObj.end_date = current_d;
+        System.out.println("=======================================================================================");
+        System.out.println("The days intervel is " + this.day_interval + " (day / days)");
         for (DaysIntervalObj e : days_interval_mapping_list) {
             System.out.println(e);
         }
@@ -833,6 +867,9 @@ public class range_pixel {
             sub_table_mapping_list.add(s_table_obj);
         }
 
+
+        System.out.println("=======================================================================================");
+        System.out.println("The sub table interval is " + this.sub_table_interval + " (day / days)");
         for (SubTableIntervalObj s_obj : sub_table_mapping_list) {
             for (DaysIntervalObj d_obj : days_interval_mapping_list) {
                 if (d_obj.start_date.compareTo(s_obj.start_date) >= 0 && d_obj.end_date.compareTo(s_obj.end_date) <= 0) {
@@ -855,13 +892,32 @@ public class range_pixel {
 
     }
 
-    private void readGPSData() {
+    private void loadGPSData() {
+        System.out.println("=======================================================================================");
         StringBuffer sb = new StringBuffer();
         BufferedReader br = null;
         int linenumber = 0;
         PData pd = new PData();
 
+        int total_line_number = 0;
         try {
+            br = new BufferedReader(new FileReader(this.GPSData));
+            String line = null;
+            while ((line = br.readLine()) != null) {
+                total_line_number++;
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        int pre_progress = 0;
+
+        try (ProgressBar pbar = new ProgressBar("Read the GPS File", 100, ProgressBarStyle.ASCII)) {
+            pbar.setExtraMessage("Reading.....");
+            pbar.stepBy(0);
+
             br = new BufferedReader(new FileReader(this.GPSData));
             String line = null;
             while ((line = br.readLine()) != null) {
@@ -871,12 +927,12 @@ public class range_pixel {
                     continue;
                 }
 
-//                if(linenumber==10)
-//                {
-//                    break;
-//                }
+                int current_progress = (int) (((linenumber + 1) * 1.0 / total_line_number) * 100);
+                if (current_progress != pre_progress) {
+                    pbar.step();
+                    pre_progress = current_progress;
+                }
 
-//                System.out.println(line);
 
                 String[] infos = line.split(",");
                 String gpsId = infos[0];
@@ -886,26 +942,42 @@ public class range_pixel {
                 double northing = Double.parseDouble(infos[4]);
                 double easting = Double.parseDouble(infos[5]);
                 long pixelId = getPixelID(northing, easting); //get the pixel that could include the current gps record
-
+//                System.out.println("current pixel id "+pixelId);
 
                 //Store the visited information
                 if (pixelId != -1) {
                     if (this.visited_result.containsKey(cowId)) {
-                        HashMap<Long, Integer> pixelMapping = this.visited_result.get(cowId);
+                        HashMap<Long, Pair<Integer, Double>> pixelMapping = this.visited_result.get(cowId);
                         if (pixelMapping.containsKey(pixelId)) {
-                            pixelMapping.put(pixelId, pixelMapping.get(pixelId) + 1);
+                            int visit_time = pixelMapping.get(pixelId).getKey() + 1;
+                            double time_stay = pixelMapping.get(pixelId).getValue();
+                            pixelMapping.put(pixelId, new Pair<>(visit_time, time_stay));
                             visited_result.put(cowId, pixelMapping);
                         } else {
-                            pixelMapping.put(pixelId, 1);
+                            pixelMapping.put(pixelId, new Pair<>(1, 0.0));
                             this.visited_result.put(cowId, pixelMapping);
                         }
 
                     } else {
-                        HashMap<Long, Integer> pixelMapping = new HashMap<>();
-                        pixelMapping.put(pixelId, 1);
+                        HashMap<Long, Pair<Integer, Double>> pixelMapping = new HashMap<>();
+                        pixelMapping.put(pixelId, new Pair<>(1, 0.0));
                         this.visited_result.put(cowId, pixelMapping);
                     }
                 }
+
+                if (pd.date != null & pd.time != null) {
+                    double time_stay = getDifferTime(pd.date, pd.time, date, time);
+                    String pre_cow_id = pd.cowId;
+                    long pre_pixel_id = pd.pixel_id;
+
+
+                    if (pre_pixel_id != -1 && pre_cow_id.equals(cowId)) {
+                        int visit_time_in_pixel = this.visited_result.get(pre_cow_id).get(pre_pixel_id).getKey();
+                        double time_stay_in_pixel = this.visited_result.get(pre_cow_id).get(pre_pixel_id).getValue() + time_stay;
+                        this.visited_result.get(pre_cow_id).put(pre_pixel_id, new Pair<>(visit_time_in_pixel, time_stay_in_pixel));
+                    }
+                }
+
                 //System.out.println(visited_result.size());
 
                 /*previous record is empty.
@@ -926,7 +998,7 @@ public class range_pixel {
 
                         if (pixelId == -1) //if I can not find such a pixel
                         {
-                            pd.setAttrs(infos);
+                            pd.setAttrs(infos, pixelId);
                             continue;
                         }
 
@@ -952,16 +1024,13 @@ public class range_pixel {
                         }
                     }
                 }
-
-                pd.setAttrs(infos);
+                pd.setAttrs(infos, pixelId);
             }
             br.close();
         } catch (Exception e) {
-//            e.printStackTrace();
             System.err.println("Can not open the Coordination file, please check it. ");
         }
         System.out.println("read the gps file done" + "   " + linenumber);
-//        System.out.println(this.result.size());
     }
 
 

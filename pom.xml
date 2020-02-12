@@ -7,6 +7,13 @@
     <groupId>nmsu</groupId>
     <artifactId>range_project</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <dependencies>
+        <dependency>
+            <groupId>me.tongfei</groupId>
+            <artifactId>progressbar</artifactId>
+            <version>0.8.1</version>
+        </dependency>
+    </dependencies>
     <build>
         <plugins>
             <plugin>
