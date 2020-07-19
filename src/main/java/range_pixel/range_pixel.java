@@ -38,7 +38,7 @@ public class range_pixel {
 
     public static void main(String args[]) {
         range_pixel rp = new range_pixel();
-//        rp.readTheFileName();
+        rp.readTheFileName();
         rp.loadPixelData();
         rp.loadGPSDateInformation();
 //        System.out.println(rp.pixelList.size());
@@ -256,10 +256,12 @@ public class range_pixel {
                 sb_row.append(key).append(",");
 
                 for (String cow_id : this.result.keySet()) {
-                    sb_row.append(pixel_visit_summary.get(cow_id).get(key) == null ? 0 : pixel_visit_summary.get(cow_id).get(key)).append(",");
+                    int visits = pixel_visit_summary.get(cow_id).get(key) == null ? 0 : pixel_visit_summary.get(cow_id).get(key);
+                    sb_row.append(visits).append(",");
                 }
 
-                sb_row.append(pixel_visit_summary.get("all").get(key) == null ? 0 : pixel_visit_summary.get("all").get(key));
+                int visits = pixel_visit_summary.get("all").get(key) == null ? 0 : pixel_visit_summary.get("all").get(key);
+                sb_row.append(visits);
                 out.println(sb_row);
 
             }

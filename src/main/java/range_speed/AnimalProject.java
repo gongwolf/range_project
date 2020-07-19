@@ -72,7 +72,7 @@ public class AnimalProject {
         System.out.println("Enter number of the lag (number of GPS records need to be considered in previous and following, default is 5):");
         str = in.readLine();
         if (str.trim().length() > 0) {
-            threshold = Integer.valueOf(str);
+            lag = Integer.valueOf(str);
         }
 
 

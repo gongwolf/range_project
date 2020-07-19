@@ -407,6 +407,7 @@ public class newAminalFunctions {
         for (int i = 0; i < pin_s.length; i++) {
             int i1 = i + 1;
             int i2 = i - 1;
+
             if (i1 == pin_s.length) {
                 i1 = 0;
             }
